@@ -1,0 +1,19 @@
+.head {
+  background-color: black;
+  height:4vw;
+  width:100vw;
+  position: absolute;
+  opacity: 0px;
+   margin: 0px;
+}
+.storeName{
+  font-family: "Apple Chancery", cursive;
+   font-size:28px;
+  font-weight: bold;
+  line-height: 0.9;
+  color: chartreuse;
+  font-style: serif;
+}
+.storeName span {
+  display: block;
+}
