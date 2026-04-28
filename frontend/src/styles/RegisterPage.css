@@ -1,9 +1,10 @@
 .register-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #1a1a1a;
+  align-items: flex-start;
+  padding-top: 40px;
+  min-height: 100vh;
+  background-color: #000000;
   color: #fff;
 }
 

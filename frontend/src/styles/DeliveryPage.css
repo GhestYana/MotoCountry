@@ -1,0 +1,120 @@
+.delivery-container {
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.delivery-content {
+  max-width: 1000px;
+  width: 100%;
+}
+
+.delivery-title {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #39FF14; /* Neon Green */
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+}
+
+.intro-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #ccc;
+  margin-bottom: 3rem;
+  max-width: 800px;
+}
+
+.delivery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-bottom: 4rem;
+}
+
+.delivery-card {
+  background: #111;
+  padding: 30px;
+  border-radius: 15px;
+  border: 1px solid #222;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.delivery-card:hover {
+  transform: translateY(-5px);
+  border-color: #39FF14;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.delivery-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.delivery-card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #888;
+}
+
+.payment-section {
+  background: linear-gradient(135deg, #111 0%, #050505 100%);
+  padding: 40px;
+  border-radius: 20px;
+  border-left: 4px solid #39FF14;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #39FF14;
+}
+
+.payment-methods {
+  display: grid;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.dot-icon {
+  width: 8px;
+  height: 8px;
+  background-color: #39FF14;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #39FF14;
+}
+
+.payment-method p {
+  font-size: 1rem;
+  color: #eee;
+}
+
+.security-note {
+  font-style: italic;
+  font-size: 0.9rem;
+  color: #666;
+  border-top: 1px solid #222;
+  padding-top: 15px;
+}
+
+@media (max-width: 768px) {
+  .delivery-title {
+    font-size: 2.2rem;
+  }
+}

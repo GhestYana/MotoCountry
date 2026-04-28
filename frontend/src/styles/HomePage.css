@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+
+.video {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+}
+
+.home-container {
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+/* Hero Slider Section */
+.hero-slider {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  padding: 20px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slider-main {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  position: relative;
+}
+
+.side-video {
+  width: 250px;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 10px;
+  opacity: 0.3;
+  filter: blur(4px) grayscale(80%);
+  transition: all 0.5s ease;
+  flex-shrink: 0;
+}
+
+.side-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.left-preview {
+  transform: translateX(40px) scale(0.8) perspective(500px) rotateY(20deg);
+}
+
+.right-preview {
+  transform: translateX(-40px) scale(0.8) perspective(500px) rotateY(-20deg);
+}
+
+
+.central-stage {
+  width: 600px;
+  height: 400px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-platform {
+  position: absolute;
+  bottom: 0;
+  width: 250px;
+  height: 30px;
+  background: radial-gradient(ellipse at center, rgba(57, 255, 20, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
+  border-radius: 50%;
+  transform: translateY(15px);
+}
+
+.moto-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.moto-image-empty {
+  width: 80%;
+  height: auto;
+  aspect-ratio: 16/9;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.nav-arrow {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 40px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.nav-arrow:hover {
+  opacity: 1;
+}
+
+.category-title {
+  margin-top: 40px;
+  font-size: 32px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+.slider-dots {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #fff;
+  box-shadow: 0 0 8px #fff;
+}

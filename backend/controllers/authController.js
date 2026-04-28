@@ -22,9 +22,10 @@ module.exports.verifyEmailController = async (req, res) => {
   const { token } = req.params;
   try {
     const result = await verifyEmailService(token);
-    res.status(200).json(result);
+    // Redirect to a dedicated success page on the frontend
+    res.redirect(`http://localhost:5173/verification-success?token=${result.token}`);
   } catch (error) {
-    res.status(500).json(error.message);
+    res.redirect(`http://localhost:5173/?error=${encodeURIComponent(error.message)}`);
   }
 };
 

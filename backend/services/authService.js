@@ -7,56 +7,106 @@ const SECRET_KEY = process.env.JWT_SECRET || 'your_secret_key';
 
 module.exports.registerService = async (email, first_name, last_name, role, phone, password) => {
   try {
-    // Check if user exists
+    // 1. Проверка
     const sql = `SELECT * FROM users WHERE email = $1 OR phone = $2`;
     const userResult = await db.query(sql, [email, phone]);
-    if (userResult.rows.length > 0) throw new Error('Користувач з таким імейлом або номером телефону вже існує')
+    if (userResult.rows.length > 0) {
+      throw new Error('Користувач вже існує');
+    }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    // Insert user
-    const sql2 = 'INSERT INTO users (email, first_name, last_name, password_hash, role, phone, is_email_verified, is_blocked, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)'
-    const result2 = await db.query(sql2, [email, first_name, last_name, hashedPassword, role || 'client', phone, false, false, true]);
+    // 2. Хеш
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate token
-    const token = jwt.sign({ email, phone }, SECRET_KEY, { expiresIn: '2d' });
+    // 3. Создание пользователя
+    const sql2 = `
+      INSERT INTO users 
+      (email, first_name, last_name, password_hash, role, phone, is_email_verified, is_blocked, is_active) 
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) 
+      RETURNING *
+    `;
+    const result = await db.query(sql2, [
+      email,
+      first_name,
+      last_name,
+      hashedPassword,
+      role || 'client',
+      phone,
+      false,
+      false,
+      true
+    ]);
 
+    const user = result.rows[0];
+
+    // ✅ 4. EMAIL TOKEN (только для подтверждения)
+    const emailToken = jwt.sign(
+      { email: user.email, phone: user.phone },
+      SECRET_KEY,
+      { expiresIn: '1d' }
+    );
+
+    // ✅ 5. AUTH TOKEN (логин)
+    const authToken = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      SECRET_KEY,
+      { expiresIn: '2d' }
+    );
+
+    // 6. Отправка email
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: 'motocountry.store@gmail.com',
-        pass: 'hyqz ilmv rays afho',
+        pass: 'kbxt ljpm fman tocs',
       },
     });
 
-    let result3 = await transporter.sendMail({
-      from: 'Motocounry',
+    await transporter.sendMail({
+      from: 'Motocountry',
       to: email,
-      subject: 'Реєстрація в Motocounry',
-      text: 'Вас вітає магазин Motocounry! Для підтвердження реєстрації перейдіть за посиланням: http://localhost:5000/api/auth/verify-email/' + token,
-      html:
-        '<h4>Вас вітає магазин Motocounry!</h4><p>Для підтвердження реєстрації перейдіть за посиланням: http://localhost:5000/api/auth/verify-email/' + token + '</p> Посилання на фронтенд'
+      subject: 'Підтвердження реєстрації',
+      html: `
+        <h3>Ласкаво просимо!</h3>
+        <p>Підтвердіть email:</p>
+        <a href="http://localhost:5000/api/auth/verify-email/${emailToken}">
+          Підтвердити
+        </a>
+      `
     });
 
-    return ('На Ваш e-mail відправлено лист для підтвердження реєстрації')
+    // 7. Возврат (авто-логин)
+    return {
+      message: 'Лист відправлено',
+      token: authToken,
+      user
+    };
+
   } catch (error) {
     console.error(error);
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 };
 
 module.exports.verifyEmailService = async (token) => {
   try {
-
     const decodedToken = jwt.verify(token, SECRET_KEY);
     const sql = `SELECT * FROM users WHERE email = $1 AND phone = $2`;
-    await db.query(sql, [decodedToken.email, decodedToken.phone]);
+    const result = await db.query(sql, [decodedToken.email, decodedToken.phone]);
 
-    const sql2 = 'UPDATE users SET is_email_verified = true WHERE email = $1 AND phone = $2';
-    await db.query(sql2, [decodedToken.email, decodedToken.phone]);
+    if (result.rows.length === 0) throw new Error('Користувача не знайдено');
+    const user = result.rows[0];
 
-    return ('Ваш e-mail успішно підтверджено')
+    const sql2 = 'UPDATE users SET is_email_verified = true WHERE id = $1';
+    await db.query(sql2, [user.id]);
+
+    // Generate a fresh AUTH token for login
+    const authToken = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      SECRET_KEY,
+      { expiresIn: '2d' }
+    );
+
+    return { token: authToken, user };
   } catch (error) {
     console.error(error);
     throw new Error(error.message)
@@ -108,7 +158,15 @@ module.exports.loginService = async (email, password) => {
     if (!user.is_email_verified) throw new Error('Ваш e-mail не підтверджено');
     if (user.is_blocked) throw new Error('Ваш обліковий запис заблоковано');
 
-    const token = jwt.sign({ email, phone: user.phone }, SECRET_KEY, { expiresIn: '2d' });
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role
+      },
+      SECRET_KEY,
+      { expiresIn: '2d' }
+    );
     const addToken = `UPDATE users SET token = $1 WHERE id = $2`;
     await db.query(addToken, [token, user.id]);
     return { token, user };

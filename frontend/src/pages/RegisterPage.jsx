@@ -1,12 +1,14 @@
-import React from 'react';
 import { useState } from 'react';
 import '../styles/RegisterPage.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
+    first_name: '',
+    last_name: '',
+    phone: '',
     email: '',
     password: ''
   });
@@ -33,7 +35,7 @@ const RegisterPage = () => {
       }
       const data = await response.json();
       console.log('Registration successful:', data);
-      // Redirect to login or show success message
+      navigate('/registration-confirm');
     } catch (error) {
       console.error('Registration error:', error);
     }
@@ -42,10 +44,10 @@ const RegisterPage = () => {
   return (
     <div className="register-container">
       <div className="register-card">
-        <h1 className="register-title">Join MotoCountry</h1>
+        <h1 className="register-title"> Реєстрація</h1>
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="first_name">Name</label>
+            <label htmlFor="first_name">Ім'я</label>
             <input
               type="text"
               id="first_name"
