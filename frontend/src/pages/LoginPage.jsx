@@ -23,6 +23,7 @@ const LoginPage = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     // Notify header and other components
     window.dispatchEvent(new Event('authUpdated'));
     navigate('/login'); // Refresh current view
@@ -47,6 +48,7 @@ const LoginPage = () => {
       }
 
       localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       window.dispatchEvent(new Event('authUpdated'));
       navigate('/');
 

@@ -3,12 +3,9 @@ const { getMotorcycles } = require('../services/motoProdService');
 module.exports.getMotorcyclesController = async (req, res) => {
   try {
     const filters = req.query;
-    console.log('Fetching motorcycles with filters:', filters);
     const result = await getMotorcycles(filters);
-    console.log('Query returned rows:', result.rows.length);
     res.json(result.rows);
   } catch (err) {
-    console.error('Error fetching motorcycles:', err);
     res.status(500).json(err.message);
   }
 };

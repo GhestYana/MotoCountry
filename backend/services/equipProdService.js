@@ -1,3 +1,5 @@
+const db = require('../db');
+
 module.exports.getEquipment = async (filters) => {
   let query = `SELECT * FROM prod_equipment WHERE 1=1`;
   let values = [];

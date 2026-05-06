@@ -9,8 +9,12 @@ import Returns from './pages/ReturnsPage';
 import Contacts from './pages/ContactsPage';
 import RegistrationConfirm from './pages/RegistrationConfirmPage';
 import VerificationSuccess from './pages/VerificationSuccessPage';
+import CartPage from './pages/CartPage';
 
 import MotoPage from './pages/MotoPage';
+import EquipmentPage from './pages/EquipmentPage';
+import ComponentsPage from './pages/ComponentsPage';
+import FavoritesPage from './pages/FavoritesPage';
 
 // Placeholder components for missing pages
 const Moto = () => <h1>Moto Details Page</h1>;
@@ -43,6 +47,10 @@ function App() {
         <Route path="/verification-success" element={<VerificationSuccess />} />
         <Route path="/moto" element={<MotoPage />} />
         <Route path="/moto/:id" element={<Moto />} />
+        <Route path="/equipment" element={<EquipmentPage />} />
+        <Route path="/components" element={<ComponentsPage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/cart-items" element={<CartPage />} />
       </Routes>
     </Router>
     //     {/* <div className = "head">

@@ -38,21 +38,18 @@ module.exports.registerService = async (email, first_name, last_name, role, phon
 
     const user = result.rows[0];
 
-    // ✅ 4. EMAIL TOKEN (только для подтверждения)
     const emailToken = jwt.sign(
       { email: user.email, phone: user.phone },
       SECRET_KEY,
       { expiresIn: '1d' }
     );
 
-    // ✅ 5. AUTH TOKEN (логин)
     const authToken = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       SECRET_KEY,
       { expiresIn: '2d' }
     );
 
-    // 6. Отправка email
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

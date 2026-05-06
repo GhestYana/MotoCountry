@@ -1,21 +1,34 @@
 const db = require('../db');
+const jwt = require('jsonwebtoken');
 
 module.exports.isClientLogged = async (req, res, next) => {
   try {
-    // console.log("555555555555555", req.headers);
-    const token = req.headers.authorization;
+    console.log("JWT_SECRET:", process.env.JWT_SECRET);
+    console.log("AUTH HEADER:", req.headers.authorization);
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const token = authHeader.split(' ')[1];
     if (!token) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
-    const sql = 'SELECT * FROM users WHERE token = $1';
-    const data = [token];
-    const result = await db.query(sql, data);
-    if (result.rows.length === 0) {
-      return res.status(401).json({ message: 'Unauthorized' });
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ message: 'Invalid token' });
     }
+
+    if (!decoded || !decoded.id) {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    req.user = decoded;
+
     next();
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
-}
+};

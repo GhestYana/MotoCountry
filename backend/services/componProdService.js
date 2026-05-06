@@ -1,3 +1,5 @@
+const db = require('../db');
+
 module.exports.getComponents = async (filters) => {
   let query = `SELECT * FROM prod_components WHERE 1=1`;
   let values = [];

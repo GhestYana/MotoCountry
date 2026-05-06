@@ -10,6 +10,8 @@ const isClientLogged = require('./middleware/isClientLogged').isClientLogged;
 const motorcyclesRoutes = require('./routes/motorcyclesRoutes');
 const equipmentRoutes = require('./routes/equipmentRoutes');
 const componentsRoutes = require('./routes/componentsRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const favoritesRoutes = require('./routes/favoritesRoutes');
 
 
 const app = express();
@@ -22,6 +24,8 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/motorcycles', motorcyclesRoutes);
 app.use('/api/equipment', equipmentRoutes);
 app.use('/api/components', componentsRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
 app.use('/static', express.static('static'));
 
