@@ -22,15 +22,46 @@ const Moto = () => <h1>Moto Details Page</h1>;
 function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
+    const tokenFromUrl = params.get('token');
 
-    if (token) {
-      localStorage.setItem('token', token);
-      // Clean up the URL
+    if (tokenFromUrl) {
+      localStorage.setItem('token', tokenFromUrl);
       window.history.replaceState({}, document.title, window.location.pathname);
-      // Force update components that depend on auth state
       window.dispatchEvent(new Event('authUpdated'));
     }
+
+    const syncWithServer = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        // Sync Cart
+        const cartRes = await fetch('/api/cart-items', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (cartRes.ok) {
+          const cartData = await cartRes.json();
+          localStorage.setItem('cart', JSON.stringify(cartData));
+          window.dispatchEvent(new Event('cartUpdated'));
+        }
+
+        // Sync Favorites
+        const favRes = await fetch('/api/favorites', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (favRes.ok) {
+          const favData = await favRes.json();
+          localStorage.setItem('favorites', JSON.stringify(favData));
+          window.dispatchEvent(new Event('favoritesUpdated'));
+        }
+      } catch (err) {
+        console.error("Помилка синхронізації з сервером:", err);
+      }
+    };
+
+    syncWithServer();
+    window.addEventListener('authUpdated', syncWithServer);
+    return () => window.removeEventListener('authUpdated', syncWithServer);
   }, []);
 
   return (

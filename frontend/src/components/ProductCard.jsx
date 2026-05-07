@@ -41,7 +41,7 @@ const ProductCard = ({ id, image, type, model, price, details, category }) => {
     }
 
     try {
-      const endpoint = isCart ? '/api/cart-items/remove-item' : '/api/cart-items/add-item';
+      const endpoint = isCart ? `/api/cart-items/remove-item/${id}` : '/api/cart-items/add-item';
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -155,7 +155,8 @@ const ProductCard = ({ id, image, type, model, price, details, category }) => {
           </div>
         </div>
         <div className="moto-card-actions">
-          <button className={`add-to-cart-btn ${isCart ? 'active' : ''}`}
+          <button
+            className={`add-to-cart-btn ${isCart ? 'active' : ''}`}
             aria-label={isCart ? "Видалити з корзини" : "Додати в корзину"}
             onClick={handleAddToCart}>
             {isCart ? "Видалити з корзини" : "Додати в корзину"}

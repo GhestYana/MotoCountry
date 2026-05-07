@@ -25,7 +25,7 @@ app.use('/api/motorcycles', motorcyclesRoutes);
 app.use('/api/equipment', equipmentRoutes);
 app.use('/api/components', componentsRoutes);
 app.use('/api/upload', uploadRoutes);
-app.use('/api/favorites', favoritesRoutes);
+app.use('/api/favorites', isClientLogged, favoritesRoutes);
 
 app.use('/static', express.static('static'));
 

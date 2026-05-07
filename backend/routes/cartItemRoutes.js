@@ -4,8 +4,9 @@ const cartItemRoutes = express.Router();
 
 cartItemRoutes.post('/add-item', addCartItemController);
 cartItemRoutes.get('/', getCartItemsController);
-cartItemRoutes.post('/remove-item', removeCartItemController);
-cartItemRoutes.put('/update-item', updateCartItemController);
+cartItemRoutes.delete('/remove-item/:id', removeCartItemController);
+cartItemRoutes.post('/remove-item-by-product', removeCartItemController); // New route for ProductCard
+cartItemRoutes.put('/update-item/:id', updateCartItemController);
 
 module.exports = cartItemRoutes;
 
