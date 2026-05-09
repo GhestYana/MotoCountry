@@ -23,6 +23,15 @@ const CartPage = () => {
   };
 
   const fetchCartItems = async () => {
+    // 1. First, load from localStorage for immediate display (works for guests too)
+    const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCartItems(localCart.map(item => ({
+      ...item,
+      // Ensure field consistency with what the UI expects
+      cart_item_id: item.cart_item_id || item.id, 
+      title: item.title || item.model // ProductCard uses model, API uses title
+    })));
+
     const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
 
@@ -38,17 +47,47 @@ const CartPage = () => {
         }
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(" Не вдалося завантажити кошик:", errorText);
+      if (response.status === 401) {
+        // Token is invalid or expired
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('cart'); // Clear ghost cart
         setCartItems([]);
+        window.dispatchEvent(new Event('authUpdated'));
+        window.dispatchEvent(new Event('cartUpdated'));
+        setLoading(false);
+        return;
+      }
+
+      if (!response.ok) {
+        setLoading(false);
         return;
       }
 
       const data = await response.json();
-      setCartItems(data);
+      
+      // Map API data to our unified format
+      const normalizedData = data.map(item => ({
+        id: item.product_id,
+        cart_item_id: item.cart_item_id,
+        quantity: item.quantity,
+        category: item.type,
+        title: item.title,
+        price: item.price,
+        image: item.image,
+        brand: item.brand
+      }));
+
+      setCartItems(normalizedData);
+      
+      // Sync localStorage with fresh server data
+      localStorage.setItem('cart', JSON.stringify(normalizedData));
+      window.dispatchEvent(new Event('cartUpdated'));
+
     } catch (err) {
-      setError(err.message);
+      console.error("Error fetching cart:", err);
+      // If we can't reach the server, we keep showing the local cart 
+      // but only if it's not a 401 error.
     } finally {
       setLoading(false);
     }
@@ -56,14 +95,36 @@ const CartPage = () => {
 
   useEffect(() => {
     fetchCartItems();
+    
+    // Listen for changes from other tabs/components
+    const handleSync = () => {
+      const updatedCart = JSON.parse(localStorage.getItem('cart')) || [];
+      setCartItems(updatedCart);
+    };
+    
+    window.addEventListener('cartUpdated', handleSync);
+    return () => window.removeEventListener('cartUpdated', handleSync);
   }, []);
 
   const handleUpdateQuantity = async (cartItemId, newQuantity) => {
     if (newQuantity < 1) return;
 
+    // 1. Update localStorage and UI immediately for snappy response
+    setCartItems(prev => {
+      const newItems = prev.map(item =>
+        String(item.cart_item_id) === String(cartItemId) ? { ...item, quantity: newQuantity } : item
+      );
+      localStorage.setItem('cart', JSON.stringify(newItems));
+      window.dispatchEvent(new Event('cartUpdated'));
+      return newItems;
+    });
+
+    // 2. If logged in, sync with server
     const token = localStorage.getItem('token');
+    if (!token) return;
+
     try {
-      const res = await fetch(`/api/cart-items/update-item/${cartItemId}`, {
+      await fetch(`/api/cart-items/update-item/${cartItemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -71,43 +132,35 @@ const CartPage = () => {
         },
         body: JSON.stringify({ quantity: newQuantity })
       });
-
-      if (res.ok) {
-        setCartItems(prev => prev.map(item =>
-          item.cart_item_id === cartItemId ? { ...item, quantity: newQuantity } : item
-        ));
-      }
     } catch (err) {
-      console.error("Помилка оновлення кількості:", err);
+      console.error("Помилка оновлення кількості на сервері:", err);
     }
   };
 
   const handleRemoveItem = async (cartItemId) => {
-    const token = localStorage.getItem('token');
     const itemToRemove = cartItems.find(item => item.cart_item_id === cartItemId);
 
+    // 1. Update localStorage and UI immediately
+    setCartItems(prev => {
+      const newItems = prev.filter(item => String(item.cart_item_id) !== String(cartItemId));
+      localStorage.setItem('cart', JSON.stringify(newItems));
+      window.dispatchEvent(new Event('cartUpdated'));
+      return newItems;
+    });
+
+    // 2. If logged in, sync with server
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
     try {
-      const res = await fetch(`/api/cart-items/remove-item/${cartItemId}`, {
+      await fetch(`/api/cart-items/remove-item/${cartItemId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-
-      if (res.ok) {
-        setCartItems(prev => prev.filter(item => item.cart_item_id !== cartItemId));
-
-        // Synchronize with localStorage
-        if (itemToRemove) {
-          let cart = JSON.parse(localStorage.getItem('cart')) || [];
-          cart = cart.filter(cartItem => cartItem.id !== itemToRemove.id);
-          localStorage.setItem('cart', JSON.stringify(cart));
-        }
-
-        window.dispatchEvent(new Event('cartUpdated'));
-      }
     } catch (err) {
-      console.error("Помилка видалення товару:", err);
+      console.error("Помилка видалення товару на сервері:", err);
     }
   };
 
@@ -150,6 +203,7 @@ const CartPage = () => {
                     className="qty-btn"
                     onClick={() => handleUpdateQuantity(item.cart_item_id, item.quantity - 1)}
                   >
+                    -
                   </button>
                   <span className="qty-value">{item.quantity}</span>
                   <button

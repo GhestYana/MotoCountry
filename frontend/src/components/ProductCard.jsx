@@ -8,7 +8,7 @@ const ProductCard = ({ id, image, type, model, price, details, category }) => {
   useEffect(() => {
     const checkCart = () => {
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      setIsCart(cart.some(item => item.id === id));
+      setIsCart(cart.some(item => String(item.id) === String(id)));
     };
     checkCart();
 
@@ -41,15 +41,29 @@ const ProductCard = ({ id, image, type, model, price, details, category }) => {
     }
 
     try {
-      const endpoint = isCart ? `/api/cart-items/remove-item/${id}` : '/api/cart-items/add-item';
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ userId, prodId: id, category: category }) // Added category
-      });
+      let res;
+      if (isCart) {
+        // Find the cart item ID from localStorage if possible, or use simple DELETE if supported
+        // The backend expects cart_item_id, but here 'id' is product_id.
+        // Let's check how removeCartItemController works.
+        res = await fetch(`/api/cart-items/remove-item-by-product`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ userId, prodId: id, category: category })
+        });
+      } else {
+        res = await fetch('/api/cart-items/add-item', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ userId, prodId: id, category: category })
+        });
+      }
 
       if (res.ok) {
         const newCartState = !isCart;
@@ -57,9 +71,9 @@ const ProductCard = ({ id, image, type, model, price, details, category }) => {
 
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         if (newCartState) {
-          cart.push({ id, image, type, model, price, details, category });
+          cart.push({ id, image, type, model, price, details, category, quantity: 1 });
         } else {
-          cart = cart.filter(item => item.id !== id);
+          cart = cart.filter(item => String(item.id) !== String(id));
         }
         localStorage.setItem('cart', JSON.stringify(cart));
 
@@ -73,7 +87,7 @@ const ProductCard = ({ id, image, type, model, price, details, category }) => {
   useEffect(() => {
     const checkFavorite = () => {
       const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      setIsFavorite(favorites.some(fav => fav.id === id));
+      setIsFavorite(favorites.some(fav => String(fav.id) === String(id)));
     };
     checkFavorite();
 
@@ -124,7 +138,7 @@ const ProductCard = ({ id, image, type, model, price, details, category }) => {
         if (newFavoriteState) {
           favorites.push({ id, image, type, model, price, details, category });
         } else {
-          favorites = favorites.filter(fav => fav.id !== id);
+          favorites = favorites.filter(fav => String(fav.id) !== String(id));
         }
         localStorage.setItem('favorites', JSON.stringify(favorites));
 

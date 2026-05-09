@@ -1,4 +1,4 @@
-const { addCartItemService, getCartItemsService, removeCartItemService, updateCartItemService } = require('../services/cartItemService');
+const { addCartItemService, getCartItemsService, removeCartItemService, updateCartItemService, removeCartItemByProductService } = require('../services/cartItemService');
 
 module.exports.addCartItemController = async (req, res) => {
   try {
@@ -75,3 +75,23 @@ module.exports.updateCartItemController = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 }
+
+module.exports.removeCartItemByProductController = async (req, res) => {
+  try {
+    const { userId, prodId, category } = req.body;
+    
+    let prod_motorcycles_id = null;
+    let prod_equipment_id = null;
+    let prod_components_id = null;
+
+    if (category === 'motorcycles' || category === 'motorcycle') prod_motorcycles_id = prodId;
+    else if (category === 'equipment') prod_equipment_id = prodId;
+    else if (category === 'components' || category === 'component' || category === 'accessories') prod_components_id = prodId;
+
+    const result = await removeCartItemByProductService(userId, prod_motorcycles_id, prod_equipment_id, prod_components_id);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
