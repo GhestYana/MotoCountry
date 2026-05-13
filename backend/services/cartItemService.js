@@ -7,7 +7,23 @@ const db = require('../db.js');
 
 module.exports.addCartItemService = async (quantity, cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id, user_id) => {
   try {
-    //if cart is not exist, create a new cart
+    // 1. Availability validation
+    let productDetails;
+    if (prod_motorcycles_id) {
+      productDetails = await db.query('SELECT availability FROM prod_motorcycles WHERE id = $1', [prod_motorcycles_id]);
+    } else if (prod_equipment_id) {
+      productDetails = await db.query('SELECT availability FROM prod_equipment WHERE id = $1', [prod_equipment_id]);
+    } else if (prod_components_id) {
+      productDetails = await db.query('SELECT availability FROM prod_components WHERE id = $1', [prod_components_id]);
+    }
+
+    if (productDetails && productDetails.rows[0]) {
+      const status = productDetails.rows[0].availability;
+      if (status !== 'available') {
+        throw new Error("Товар тимчасово недоступний для замовлення");
+      }
+    }
+
     let cart_id_to_use = cart_id;
 
     if (!cart_id_to_use) {
@@ -18,44 +34,37 @@ module.exports.addCartItemService = async (quantity, cart_id, prod_motorcycles_i
     }
 
     if (!cart_id_to_use) {
-      const sql = 'INSERT INTO carts (user_id, status) VALUES ($1, $2) RETURNING id'
-      const data = [user_id, 'created'];
-      const result = await db.query(sql, data);
+      const sql = 'INSERT INTO carts (user_id, status) VALUES ($1, $2) RETURNING id';
+      const result = await db.query(sql, [user_id, 'created']);
       cart_id_to_use = result.rows[0].id;
-
-      const sql1 = 'INSERT INTO cart_items (prod_motorcycles_id, prod_equipment_id, prod_components_id, quantity, cart_id) VALUES ($1, $2, $3, $4, $5)'
-      const data1 = [prod_motorcycles_id, prod_equipment_id, prod_components_id, quantity, cart_id_to_use];
-      const result1 = await db.query(sql1, data1);
-      return "OK";
     }
 
     cart_id = cart_id_to_use;
-    //if cart is exist and this product is already in the cart, update the quantity
-    const sql2 = `
+
+    // Check if item already exists
+    const sqlCheck = `
       SELECT * FROM cart_items 
       WHERE cart_id = $1 
       AND (prod_motorcycles_id IS NOT DISTINCT FROM $2)
       AND (prod_equipment_id IS NOT DISTINCT FROM $3) 
       AND (prod_components_id IS NOT DISTINCT FROM $4)
     `;
-    const data2 = [cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id];
-    const result2 = await db.query(sql2, data2);
-    if (result2.rows.length > 0) {
-      const sql = `
+    const checkResult = await db.query(sqlCheck, [cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id]);
+
+    if (checkResult.rows.length > 0) {
+      const sqlUpdate = `
         UPDATE cart_items SET quantity = quantity + $1 
         WHERE cart_id = $2 
         AND (prod_motorcycles_id IS NOT DISTINCT FROM $3)
         AND (prod_equipment_id IS NOT DISTINCT FROM $4)
         AND (prod_components_id IS NOT DISTINCT FROM $5)
       `;
-      const data = [quantity, cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id];
-      const result = await db.query(sql, data);
-      return "OK";
+      await db.query(sqlUpdate, [quantity, cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id]);
+    } else {
+      const sqlInsert = 'INSERT INTO cart_items (cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id, quantity) VALUES ($1, $2, $3, $4, $5)';
+      await db.query(sqlInsert, [cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id, quantity]);
     }
-    //if cart is exist and this product is not in the cart, add the product to the cart
-    const sql3 = 'INSERT INTO cart_items (cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id, quantity) VALUES ($1, $2, $3, $4, $5)'
-    const data3 = [cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id, quantity];
-    const result3 = await db.query(sql3, data3);
+
     return "OK";
   } catch (error) {
     console.error(error);

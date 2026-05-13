@@ -12,6 +12,8 @@ const equipmentRoutes = require('./routes/equipmentRoutes');
 const componentsRoutes = require('./routes/componentsRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const favoritesRoutes = require('./routes/favoritesRoutes');
+const searchProductRoutes = require('./routes/searchProductRoutes');
+const reviewRoutes = require('./routes/reviewRouter');
 
 
 const app = express();
@@ -26,6 +28,8 @@ app.use('/api/equipment', equipmentRoutes);
 app.use('/api/components', componentsRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/favorites', isClientLogged, favoritesRoutes);
+app.use('/api/search', searchProductRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.use('/static', express.static('static'));
 

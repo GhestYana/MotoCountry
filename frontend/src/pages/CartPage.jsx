@@ -7,19 +7,16 @@ const CartPage = () => {
   const [error, setError] = useState(null);
 
   const getItemLabel = (item) => {
-    switch (item.category) {
-      case 'motorcycles':
-        return item.title;
+    const title = item.name || item.title || item.model || 'Товар';
+    const cat = (item.category || '').toLowerCase();
 
-      case 'equipment':
-        return item.size ? `${item.size} ${item.title}` : item.title;
-
-      case 'components':
-        return item.title;
-
-      default:
-        return item.name;
+    if (cat.includes('motorcycle')) return title;
+    if (cat.includes('equipment')) {
+      return item.size ? `${item.size} ${title}` : title;
     }
+    if (cat.includes('component')) return title;
+
+    return title;
   };
 
   const fetchCartItems = async () => {
@@ -34,6 +31,33 @@ const CartPage = () => {
 
     const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
+
+    if (user && token && localCart.length > 0) {
+      // Automatic merge: if we're logged in but have local items, migrate them to DB
+      console.log("Merging local cart to server...");
+      try {
+        await Promise.all(localCart.map(item => 
+          fetch('/api/cart-items/add-item', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ 
+              userId: user.id, 
+              prodId: item.id, 
+              category: item.category,
+              quantity: item.quantity || 1
+            })
+          })
+        ));
+        localStorage.removeItem('cart');
+        window.dispatchEvent(new Event('cartUpdated'));
+        // Continue to fetch fresh combined data from server
+      } catch (err) {
+        console.error("Failed to migrate local cart:", err);
+      }
+    }
 
     if (!user || !token) {
       setLoading(false);
@@ -165,10 +189,14 @@ const CartPage = () => {
   };
 
   const calculateTotal = () => {
-    return cartItems.reduce(
-      (total, item) => total + Number(item.price) * item.quantity,
-      0
-    );
+    return cartItems.reduce((total, item) => {
+      // Extract numeric value from string (e.g., "19500 грн" -> 19500)
+      const numericPrice = typeof item.price === 'string' 
+        ? parseFloat(item.price.replace(/[^\d.]/g, ''))
+        : item.price;
+      
+      return total + (numericPrice || 0) * item.quantity;
+    }, 0);
   };
 
   if (loading) return <div className="cart-status">Завантаження...</div>;
@@ -191,7 +219,7 @@ const CartPage = () => {
             {cartItems.map((item) => (
               <div key={item.cart_item_id} className="cart-item-row">
                 <div className="item-img-container">
-                  <img src={item.image || 'https://via.placeholder.com/300x200?text=Product'} alt={item.name} />
+                  <img src={item.image || 'https://via.placeholder.com/300x200?text=Product'} alt={item.name || item.model || 'Product'} />
                 </div>
 
                 <div className="item-name-cell">
@@ -224,7 +252,9 @@ const CartPage = () => {
                 </div>
 
                 <div className="price-cell">
-                  {item.price.toLocaleString()} грн
+                  {typeof item.price === 'string' 
+                    ? item.price.replace('грн', '').trim() 
+                    : item.price.toLocaleString()} грн
                 </div>
               </div>
             ))}

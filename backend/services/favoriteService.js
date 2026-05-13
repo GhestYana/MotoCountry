@@ -9,7 +9,11 @@ module.exports.addToFavorites = async (userId, prodId, category) => {
   else if (category === 'component') column = 'prod_components_id';
   else throw new Error('Невідома категорія товару');
 
-  const query = `INSERT INTO favorites (user_id, ${column}) VALUES ($1, $2) RETURNING *`;
+  const query = `
+    INSERT INTO favorites (user_id, ${column}) 
+    VALUES ($1, $2) 
+    ON CONFLICT (user_id, ${column}) DO NOTHING 
+    RETURNING *`;
   const result = await db.query(query, [userId, prodId]);
   return result;
 }
@@ -35,7 +39,9 @@ module.exports.getFavorites = async (userId) => {
       m.name,
       m.price,
       m.image,
-      m.brand
+      m.brand,
+      m.availability,
+      (SELECT ROUND(AVG(rating), 1) FROM product_reviews WHERE motorcycle_id = m.id) as average_rating
     FROM favorites f
     JOIN prod_motorcycles m ON m.id = f.prod_motorcycles_id
     WHERE f.user_id = $1
@@ -49,7 +55,9 @@ module.exports.getFavorites = async (userId) => {
       e.name,
       e.price,
       e.image,
-      e.brand
+      e.brand,
+      e.availability,
+      (SELECT ROUND(AVG(rating), 1) FROM product_reviews WHERE equipment_id = e.id) as average_rating
     FROM favorites f
     JOIN prod_equipment e ON e.id = f.prod_equipment_id
     WHERE f.user_id = $1
@@ -63,7 +71,9 @@ module.exports.getFavorites = async (userId) => {
       c.name,
       c.price,
       c.image,
-      c.brand
+      c.brand,
+      c.availability,
+      (SELECT ROUND(AVG(rating), 1) FROM product_reviews WHERE component_id = c.id) as average_rating
     FROM favorites f
     JOIN prod_components c ON c.id = f.prod_components_id
     WHERE f.user_id = $1
@@ -79,7 +89,76 @@ module.exports.getFavorites = async (userId) => {
       name: item.name,
       price: item.price,
       image: item.image,
-      brand: item.brand
+      brand: item.brand,
+      availability: item.availability,
+      average_rating: item.average_rating
     }))
   };
 };
+
+module.exports.getFavoriteById = async (favoriteId) => {
+  const query = `
+    SELECT 
+      f.id as favorite_id,
+      'motorcycle' as category,
+      m.id as product_id,
+      m.name,
+      m.price,
+      m.image,
+      m.brand,
+      m.availability,
+      (SELECT ROUND(AVG(rating), 1) FROM product_reviews WHERE motorcycle_id = m.id) as average_rating
+    FROM favorites f
+    JOIN prod_motorcycles m ON m.id = f.prod_motorcycles_id
+    WHERE f.id = $1
+
+    UNION ALL
+
+    SELECT 
+      f.id as favorite_id,
+      'equipment' as category,
+      e.id as product_id,
+      e.name,
+      e.price,
+      e.image,
+      e.brand,
+      e.availability,
+      (SELECT ROUND(AVG(rating), 1) FROM product_reviews WHERE equipment_id = e.id) as average_rating
+    FROM favorites f
+    JOIN prod_equipment e ON e.id = f.prod_equipment_id
+    WHERE f.id = $1
+
+    UNION ALL
+
+    SELECT 
+      f.id as favorite_id,
+      'component' as category,
+      c.id as product_id,
+      c.name,
+      c.price,
+      c.image,
+      c.brand,
+      c.availability,
+      (SELECT ROUND(AVG(rating), 1) FROM product_reviews WHERE component_id = c.id) as average_rating
+    FROM favorites f
+    JOIN prod_components c ON c.id = f.prod_components_id
+    WHERE f.id = $1
+  `;
+
+  const result = await db.query(query, [favoriteId]);
+
+  return {
+    rows: result.rows.map(item => ({
+      id: item.product_id,
+      favoriteId: item.favorite_id,
+      category: item.category,
+      name: item.name,
+      price: item.price,
+      image: item.image,
+      brand: item.brand,
+      availability: item.availability,
+      average_rating: item.average_rating
+    }))
+  };
+};
+

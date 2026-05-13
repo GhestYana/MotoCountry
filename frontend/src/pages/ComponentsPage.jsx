@@ -90,10 +90,12 @@ const ComponentsPage = () => {
               key={item.id}
               id={item.id}
               category="component"
+              availability={item.availability}
               image={item.image || 'https://via.placeholder.com/300x200?text=Component'}
               type={TYPE_OPTIONS.find(t => t.value === item.type)?.label || item.type}
               model={item.name}
               price={`${item.price} грн`}
+              average_rating={item.average_rating}
               details={[
                 { label: "Бренд", value: item.brand },
               ]}

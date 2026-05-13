@@ -182,10 +182,12 @@ const MotoPage = () => {
               key={moto.id}
               id={moto.id}
               category="motorcycle"
+              availability={moto.availability}
               image={moto.image || 'https://bikes.honda.ua/images/models/CB650R.png'}
               type={TYPE_OPTIONS.find(t => t.value === moto.type)?.label || moto.type}
               model={moto.name}
               price={`${moto.price} грн`}
+              average_rating={moto.average_rating}
               details={[{ label: "Робочий об'єм", value: `${moto.engine_displacement || '-'} см³` }]}
             />
           ))}

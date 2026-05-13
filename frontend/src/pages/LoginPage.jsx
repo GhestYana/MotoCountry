@@ -49,7 +49,60 @@ const LoginPage = () => {
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+
+      // Merge local cart with server-side cart
+      const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (localCart.length > 0) {
+        try {
+          await Promise.all(localCart.map(item => 
+            fetch('/api/cart-items/add-item', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${data.token}`
+              },
+              body: JSON.stringify({ 
+                userId: data.user.id, 
+                prodId: item.id, 
+                category: item.category,
+                quantity: item.quantity || 1
+              })
+            })
+          ));
+          // Clear local cart after successful migration (CartPage will refetch fresh data)
+          localStorage.removeItem('cart');
+        } catch (err) {
+          console.error("Failed to merge cart:", err);
+        }
+      }
+
+      // Merge local favorites with server-side favorites
+      const localFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      if (localFavorites.length > 0) {
+        try {
+          await Promise.all(localFavorites.map(item => 
+            fetch('/api/favorites/add', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${data.token}`
+              },
+              body: JSON.stringify({ 
+                userId: data.user.id, 
+                prodId: item.id, 
+                category: item.category
+              })
+            })
+          ));
+          localStorage.removeItem('favorites');
+        } catch (err) {
+          console.error("Failed to merge favorites:", err);
+        }
+      }
+
       window.dispatchEvent(new Event('authUpdated'));
+      window.dispatchEvent(new Event('cartUpdated'));
+      window.dispatchEvent(new Event('favoritesUpdated'));
       navigate('/');
 
     } catch (error) {

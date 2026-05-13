@@ -4,24 +4,40 @@ import '../styles/Header.css';
 
 const Header = () => {
   const [cartCount, setCartCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    const updateCartCount = () => {
+    const updateHeaderState = () => {
+      // Cart Count
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
       const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
       setCartCount(totalItems);
+
+      // Admin Status
+      const user = JSON.parse(localStorage.getItem('user'));
+      setIsAdmin(user && user.role === 'admin');
     };
 
-    updateCartCount();
-    window.addEventListener('storage', updateCartCount);
-    window.addEventListener('cartUpdated', updateCartCount);
+    updateHeaderState();
+    window.addEventListener('storage', updateHeaderState);
+    window.addEventListener('cartUpdated', updateHeaderState);
+    window.addEventListener('authUpdated', updateHeaderState);
 
     return () => {
-      window.removeEventListener('storage', updateCartCount);
-      window.removeEventListener('cartUpdated', updateCartCount);
+      window.removeEventListener('storage', updateHeaderState);
+      window.removeEventListener('cartUpdated', updateHeaderState);
+      window.removeEventListener('authUpdated', updateHeaderState);
     };
   }, []);
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter') {
+      navigate(`/search?query=${search}`);
+    }
+  };
+
 
   return (
     <header className="main-header">
@@ -35,17 +51,35 @@ const Header = () => {
           <Link to="/delivery">Доставка і оплата</Link>
           <Link to="/returns">Повернення та обмін</Link>
           <Link to="/contacts">Контакти</Link>
+          {isAdmin && (
+            <Link to="/admin" className="admin-link-highlight">Панель Адміна</Link>
+          )}
         </nav>
 
         <div className="search-container">
           <svg
             className="search-icon"
-            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" className="search-input" placeholder="Пошук" />
+
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Пошук"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleSearch}
+          />
         </div>
 
         <div className="header-icons">
