@@ -1,0 +1,223 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Search, User, Heart, ShoppingCart, Bell, ChevronDown } from 'lucide-react';
+import '../styles/Header.css';
+
+const Header = () => {
+  const [cartItemCount, setCartCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+  const [search, setSearch] = useState('');
+
+  // Notifications state
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notifRef = useRef(null);
+
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+
+  const fetchNotifications = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      const res = await fetch('/api/notifications', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) setNotifications(await res.json());
+    } catch (_) {}
+  };
+
+  const markAllRead = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      await fetch('/api/notifications/read-all', {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+    } catch (_) {}
+  };
+
+  useEffect(() => {
+    const updateHeaderState = () => {
+      // Cart Count
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      setCartCount(totalItems);
+
+      // Auth & Admin Status
+      const user = JSON.parse(localStorage.getItem('user'));
+      const token = localStorage.getItem('token');
+      const loggedIn = !!user && !!token;
+      setIsLoggedIn(loggedIn);
+      setIsAdmin(user && user.role === 'admin');
+
+      if (loggedIn) fetchNotifications();
+    };
+
+    updateHeaderState();
+    // Poll every 30 seconds for new notifications
+    const interval = setInterval(fetchNotifications, 30000);
+
+    window.addEventListener('storage', updateHeaderState);
+    window.addEventListener('cartUpdated', updateHeaderState);
+    window.addEventListener('authUpdated', updateHeaderState);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', updateHeaderState);
+      window.removeEventListener('cartUpdated', updateHeaderState);
+      window.removeEventListener('authUpdated', updateHeaderState);
+    };
+  }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter') {
+      const currentParams = new URLSearchParams(window.location.search);
+      currentParams.set('query', search);
+      navigate(`/search?${currentParams.toString()}`);
+    }
+  };
+
+
+  return (
+    <header className="main-header">
+      <div className="header-top">
+        <Link to="/" className="logo">
+          <span className="logo-moto">MOTO</span>
+          <span className="logo-country">COUNTRY</span>
+        </Link>
+
+        <nav className="top-nav">
+          <Link to="/delivery">Доставка і оплата</Link>
+          <Link to="/returns">Повернення та обмін</Link>
+          <Link to="/contacts">Контакти</Link>
+          {isAdmin && (
+            <Link to="/admin" className="admin-link-highlight">Панель Адміна</Link>
+          )}
+        </nav>
+
+        <div className="search-container">
+          <Search className="search-icon" size={20} />
+
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Пошук"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleSearch}
+          />
+        </div>
+
+        <div className="header-icons">
+          <Link to={isLoggedIn ? "/profile" : "/login"} className="icon-btn">
+            <User size={24} />
+          </Link>
+          <Link to="/favorites" className="icon-btn">
+            <Heart size={24} />
+          </Link>
+          <Link to="/cart-items" className="icon-btn">
+            <ShoppingCart size={24} />
+            {cartItemCount > 0 && <span className="cart-item-badge">{cartItemCount}</span>}
+          </Link>
+          <button className="icon-btn" onClick={() => { setShowNotifications(v => !v); if (!showNotifications && unreadCount > 0) markAllRead(); }}>
+            <Bell size={24} />
+            {unreadCount > 0 && <span className="cart-item-badge">{unreadCount}</span>}
+          </button>
+          {showNotifications && (
+            <div ref={notifRef} className="notification-dropdown">
+              <div className="notification-dropdown-header">
+                <span>Сповіщення</span>
+                {notifications.length > 0 && (
+                  <button className="notif-mark-all" onClick={markAllRead}>Прочитати всі</button>
+                )}
+              </div>
+              {notifications.length === 0 ? (
+                <p className="notif-empty">Немає сповіщень</p>
+              ) : (
+                <ul className="notif-list">
+                  {notifications.map(n => (
+                    <li key={n.id} className={`notif-item${n.is_read ? '' : ' notif-unread'}`}>
+                      <span className="notif-msg">{n.message}</span>
+                      <span className="notif-date">{new Date(n.created_at).toLocaleDateString('uk-UA')}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+        </div>
+      </div>
+
+      <div className="header-divider"></div>
+
+      <div className="category-nav">
+        <div className="category-item">
+          <button className="category-btn" onClick={() => navigate('/moto')}>
+            Мотоцикли
+            <ChevronDown size={14} />
+          </button>
+          <div className="dropdown-menu">
+            <Link to="/moto?type=Sport">Sport</Link>
+            <Link to="/moto?type=Cruiser">Cruiser</Link>
+            <Link to="/moto?type=Adventure">Adventure</Link>
+            <Link to="/moto?type=Scooter">Scooter</Link>
+            <Link to="/moto?type=Naked">Naked</Link>
+            <Link to="/moto?type=Enduro">Enduro</Link>
+            <Link to="/moto?type=Motocross">Motocross</Link>
+          </div>
+        </div>
+        <div className="category-item">
+          <button className="category-btn" onClick={() => navigate('/equipment')}>
+            Екіпірування
+            <ChevronDown size={14} />
+          </button>
+
+          <div className="dropdown-menu">
+            <Link to="/equipment?type=Шоломи">Шоломи</Link>
+            <Link to="/equipment?type=Куртки">Куртки</Link>
+            <Link to="/equipment?type=Рукавички">Рукавички</Link>
+            <Link to="/equipment?type=Мотовзуття">Мотовзуття</Link>
+            <Link to="/equipment?type=Мотоштани">Мотоштани</Link>
+            <Link to="/equipment?type=Комбінезони">Комбінезони</Link>
+            <Link to="/equipment?type=Мотожилети">Мотожилети</Link>
+            <Link to="/equipment?type=Окуляри">Окуляри</Link>
+            <Link to="/equipment?type=Моточерепахи">Моточерепахи</Link>
+            <Link to="/equipment?type=Наколінники">Наколінники</Link>
+            <Link to="/equipment?type=Кросові панцири">Кросові панцири</Link>
+            <Link to="/equipment?type=Налокітники">Налокітники</Link>
+          </div>
+        </div>
+        <div className="category-item">
+          <button className="category-btn" onClick={() => navigate('/components')}>
+            Запчастини
+            <ChevronDown size={14} />
+          </button>
+          <div className="dropdown-menu">
+            <Link to="/components?type=Двигун">Двигун</Link>
+            <Link to="/components?type=Трансмісія">Трансмісія</Link>
+            <Link to="/components?type=Гальмівна система">Гальма</Link>
+            <Link to="/components?type=Електросистема">Електроніка</Link>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;

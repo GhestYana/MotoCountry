@@ -1,0 +1,193 @@
+:root {
+  font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-soft: #050805;
+  --surface: #0a0f0a;
+  --surface-2: #101810;
+  --border: rgba(57, 255, 20, 0.22);
+  --border-strong: rgba(57, 255, 20, 0.55);
+  --text: #f4fff2;
+  --muted: #9aa895;
+  --neon: #39ff14;
+  --neon-soft: rgba(57, 255, 20, 0.12);
+  --neon-glow: 0 0 18px rgba(57, 255, 20, 0.45);
+  background-color: var(--bg);
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(57, 255, 20, 0.12),
+      transparent 28%
+    ),
+    linear-gradient(180deg, #000 0%, #030603 100%);
+  color: var(--text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: var(--neon);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  background-color: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--neon) !important;
+  box-shadow:
+    0 0 0 3px var(--neon-soft),
+    var(--neon-glow) !important;
+  outline: none;
+}
+
+button:not(:disabled) {
+  transition: all 0.3s ease;
+}
+
+.home-container,
+.moto-page-container,
+.checkout-page,
+.contacts-container,
+.delivery-container,
+.returns-container,
+.login-container,
+.register-container,
+.admin-page-layout,
+.review-page-container {
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(57, 255, 20, 0.08),
+      transparent 30%
+    ),
+    var(--bg) !important;
+  color: var(--text) !important;
+}
+
+.main-header,
+.admin-sidebar,
+.moto-filters-sidebar,
+.moto-card,
+.checkout-section,
+.summary-card,
+.cart-item-row,
+.cart-summary,
+.contacts-wrapper,
+.contacts-form-card,
+.delivery-card,
+.payment-section,
+.returns-hero,
+.info-card,
+.step,
+.login-card,
+.register-card,
+.profile-sidebar,
+.order-card,
+.profile-review-card,
+.product-detail-image,
+.product-specs-grid,
+.review-card,
+.add_review_container,
+.admin-table,
+.admin-modal,
+.stat-card {
+  background: linear-gradient(
+    145deg,
+    rgba(10, 18, 10, 0.96),
+    rgba(0, 0, 0, 0.96)
+  ) !important;
+  border-color: var(--border) !important;
+  box-shadow:
+    0 0 24px rgba(57, 255, 20, 0.08),
+    0 20px 45px rgba(0, 0, 0, 0.55) !important;
+}
+
+.logo-moto,
+.contacts-title,
+.delivery-title,
+.returns-title,
+.section-title,
+.login-title,
+.register-title,
+.profile-header h1,
+.category-label,
+.order-total-price,
+.moto-results-count,
+.product-price-large,
+.product-category-tag,
+.sidebar-header h3,
+.stat-value,
+.form-section h4 {
+  color: var(--neon) !important;
+  text-shadow: var(--neon-glow);
+}
+
+.add-to-cart-btn,
+.action-btn-main.cart,
+.confirm-btn,
+.submit-btn,
+.login-button,
+.register-button,
+.add-btn,
+.save-btn,
+.admin-tabs button.active,
+.profile-nav-btn.active,
+.checkout-btn,
+.confirm-order-btn,
+.continue-shopping,
+.submit-review-btn,
+.step-num,
+.step-circle {
+  background: var(--neon) !important;
+  color: #000 !important;
+  border-color: var(--neon) !important;
+  box-shadow: var(--neon-glow) !important;
+}
+
+.add-to-cart-btn:hover:not(.disabled),
+.action-btn-main.cart:hover,
+.submit-btn:hover,
+.login-button:hover,
+.register-button:hover,
+.checkout-btn:hover,
+.confirm-order-btn:hover,
+.continue-shopping:hover,
+.submit-review-btn:hover {
+  background: #7cff63 !important;
+  color: #000 !important;
+  box-shadow: 0 0 26px rgba(57, 255, 20, 0.65) !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
+}

@@ -1,0 +1,296 @@
+.review-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.review-page-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.review-page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.review-page-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.review-page-header p {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.review-page-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.review-page-form textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #fff;
+  background-color: #000;
+}
+
+.review-page-form button {
+  width: 100%;
+  height: 50px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #fff;
+  background-color: #000;
+}
+
+.review-page-form button:hover {
+  background-color: #39FF14;
+  cursor: pointer;
+}
+
+.review-page-reviews {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.review-page-reviews h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.review-page-reviews p {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.review-page-reviews button {
+  width: 100%;
+  height: 50px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  color: #fff;
+  background-color: #000;
+}
+
+.review-page-reviews button:hover {
+  background-color: #39FF14;
+  cursor: pointer;
+}
+
+.review-page-reviews button:active {
+  background-color: #39FF14;
+  cursor: pointer;
+}
+
+.review-page-reviews button:disabled {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:active {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus:hover {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus:hover:active {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus:hover:active:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
+
+.review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus:hover:active:focus:hover:focus {
+  background-color: #000;
+  cursor: not-allowed;
+}
