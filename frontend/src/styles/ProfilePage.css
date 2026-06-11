@@ -2,12 +2,12 @@
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
-    color: #fff;
+    color: var(--text);
 }
 
 .profile-header {
     margin-bottom: 40px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--surface-2);
     padding-bottom: 20px;
 }
 
@@ -34,13 +34,13 @@
     padding: 0 6px;
     border-radius: 999px;
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
     font-size: 0.75rem;
     font-weight: 800;
 }
 
 .profile-sidebar {
-    background: #1a1a1a;
+    background: var(--surface-2);
     padding: 30px;
     border-radius: 12px;
     height: fit-content;
@@ -54,7 +54,7 @@
 }
 
 .user-info-brief p {
-    color: #888;
+    color: var(--muted);
     margin: 0 0 25px 0;
     word-break: break-all;
     overflow-wrap: anywhere;
@@ -70,7 +70,7 @@
 .profile-nav-btn {
     background: transparent;
     border: none;
-    color: #888;
+    color: var(--muted);
     text-align: left;
     padding: 12px 15px;
     border-radius: 8px;
@@ -84,12 +84,12 @@
 
 .profile-nav-btn:hover {
     background: rgba(255, 255, 255, 0.05);
-    color: #fff;
+    color: var(--text);
 }
 
 .profile-nav-btn.active {
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
 }
 
 .profile-content {
@@ -128,7 +128,7 @@
 
 .profile-confirm-modal p {
     margin: 0;
-    color: #c8d6c3;
+    color: var(--muted);
 }
 
 .profile-confirm-actions {
@@ -161,12 +161,12 @@
 .profile-confirm-logout {
     border: 1px solid var(--neon);
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
     box-shadow: var(--neon-glow);
 }
 
 .profile-confirm-logout:hover {
-    background: #7cff63;
+    background: var(--neon);
 }
 
 .orders-list {
@@ -176,7 +176,7 @@
 }
 
 .order-card {
-    background: #1a1a1a;
+    background: var(--surface-2);
     border-radius: 12px;
     padding: 25px;
     border-left: 4px solid var(--neon);
@@ -188,17 +188,17 @@
     align-items: center;
     margin-bottom: 15px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--surface-2);
 }
 
 .order-info h3 {
     margin: 0 0 5px 0;
-    color: #fff;
+    color: var(--text);
 }
 
 .order-date {
     font-size: 0.9rem;
-    color: #888;
+    color: var(--muted);
 }
 
 .order-status {
@@ -210,33 +210,33 @@
 }
 
 .status-pending {
-    background: #555;
-    color: #fff;
+    background: var(--muted);
+    color: var(--text);
 }
 
 .status-confirmed {
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
 }
 
 .status-paid {
     background: #10b981;
-    color: #fff;
+    color: var(--text);
 }
 
 .status-sent {
     background: #f59e0b;
-    color: #fff;
+    color: var(--text);
 }
 
 .status-completed {
     background: #10b981;
-    color: #fff;
+    color: var(--text);
 }
 
 .status-cancelled {
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
 }
 
 .order-details-grid {
@@ -248,7 +248,7 @@
 
 .detail-item span {
     display: block;
-    color: #888;
+    color: var(--muted);
     font-size: 0.85rem;
     margin-bottom: 3px;
 }
@@ -259,7 +259,7 @@
     align-items: center;
     margin-top: 20px;
     padding-top: 15px;
-    border-top: 1px solid #333;
+    border-top: 1px solid var(--surface-2);
 }
 
 .order-total-price {
@@ -276,7 +276,7 @@
 
 .pay-now-btn {
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
     border: none;
     padding: 10px 20px;
     border-radius: 10px;
@@ -292,23 +292,25 @@
 }
 
 .pay-now-btn.gpay {
-    background: #000;
-    color: #fff;
-    border: 1px solid #333;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--surface-2);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .pay-now-btn:hover {
     transform: translateY(-2px);
-    background: #fff;
-    color: #000;
+    background: var(--text);
+    color: var(--bg);
     box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
 }
 
 .pay-now-btn.gpay:hover {
-    background: #222;
-    border-color: #555;
-    color: #fff;
+    background:
+        /*dark*/
+        var(--border);
+    border-color: var(--muted);
+    color: var(--text);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
 
@@ -332,7 +334,7 @@
     padding: 18px 20px;
     border: 1px solid var(--border);
     border-radius: 14px;
-    background: #101810;
+    background: var(--surface-2);
     box-shadow: 0 0 18px rgba(57, 255, 20, 0.08);
 }
 
@@ -347,7 +349,7 @@
 }
 
 .profile-notification-card span {
-    color: #888;
+    color: var(--muted);
     font-size: 0.85rem;
 }
 
@@ -369,7 +371,7 @@
 }
 
 .profile-review-card {
-    background: #1a1a1a;
+    background: var(--surface-2);
     padding: 25px;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -407,7 +409,7 @@
 }
 
 .profile-review-rating .star {
-    color: #333;
+    color: var(--surface-2);
     font-size: 1.2rem;
 }
 
@@ -417,13 +419,13 @@
 
 .profile-review-text {
     line-height: 1.6;
-    color: #ccc;
+    color: var(--muted);
     margin-bottom: 15px;
 }
 
 .profile-review-date {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--muted);
 }
 
 
@@ -450,8 +452,108 @@
 
 .profile-notification-delete:hover {
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
     box-shadow: var(--neon-glow);
+}
+
+/* ── LIGHT THEME OVERRIDES ── */
+html[data-theme="light"] .profile-sidebar,
+html[data-theme="light"] .order-card,
+html[data-theme="light"] .profile-review-card {
+    background: linear-gradient(145deg, rgba(240, 236, 230, 0.98), rgba(232, 228, 223, 0.98)) !important;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(139, 130, 118, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+html[data-theme="light"] .profile-nav-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: #2a2a2a;
+}
+
+html[data-theme="light"] .profile-nav-btn:hover {
+    color: #000;
+    background: var(--surface-3);
+}
+
+html[data-theme="light"] .profile-nav-btn.active {
+    background: var(--neon) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(139, 130, 118, 0.3) !important;
+}
+
+html[data-theme="light"] .user-info-brief h2 {
+    color: #111;
+}
+
+html[data-theme="light"] .user-info-brief p {
+    color: #444;
+}
+
+html[data-theme="light"] .order-info h3 {
+    color: #111;
+}
+
+html[data-theme="light"] .order-date {
+    color: #555;
+}
+
+html[data-theme="light"] .detail-item {
+    color: #222;
+}
+
+html[data-theme="light"] .detail-item span {
+    color: #555;
+}
+
+html[data-theme="light"] .profile-notification-card p {
+    color: #111;
+}
+
+html[data-theme="light"] .profile-notification-card span {
+    color: #555;
+}
+
+html[data-theme="light"] .profile-review-text {
+    color: #333;
+}
+
+html[data-theme="light"] .profile-review-date {
+    color: #666;
+}
+
+html[data-theme="light"] .order-item-title {
+    color: #111;
+}
+
+html[data-theme="light"] .order-item-brand,
+html[data-theme="light"] .order-item-qty {
+    color: #555;
+}
+
+html[data-theme="light"] .orders-section h2,
+html[data-theme="light"] .reviews-tab-section h2,
+html[data-theme="light"] .notifications-tab-section h2,
+html[data-theme="light"] .favorites-section h2 {
+    color: #111;
+}
+
+html[data-theme="light"] .pay-now-btn.gpay {
+    background: var(--bg);
+    border: 1px solid var(--border);
+}
+
+html[data-theme="light"] .pay-now-btn.gpay:hover {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+}
+
+html[data-theme="light"] .profile-review-rating .star.filled {
+    color: #d97706;
+}
+
+html[data-theme="light"] .profile-confirm-cancel {
+    color: #ffffff;
 }
 
 /* Order items toggle */
@@ -461,7 +563,7 @@
     gap: 6px;
     background: none;
     border: none;
-    color: #4ade80;
+    color: var(--neon);
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
@@ -484,7 +586,7 @@
 }
 
 .order-items-loading {
-    color: #888;
+    color: var(--muted);
     font-size: 0.85rem;
     padding: 8px 0;
 }
@@ -509,7 +611,7 @@
     height: 52px;
     object-fit: cover;
     border-radius: 8px;
-    background: #1a1a1a;
+    background: var(--surface-2);
     flex-shrink: 0;
 }
 
@@ -524,7 +626,7 @@
 .order-item-title {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -532,7 +634,7 @@
 
 .order-item-brand {
     font-size: 0.78rem;
-    color: #888;
+    color: var(--muted);
 }
 
 .order-item-right {
@@ -545,11 +647,73 @@
 
 .order-item-qty {
     font-size: 0.8rem;
-    color: #888;
+    color: var(--muted);
 }
 
 .order-item-price {
     font-size: 0.9rem;
     font-weight: 700;
-    color: #4ade80;
+    color: var(--neon);
+}
+
+@media (max-width: 768px) {
+    .profile-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .order-card {
+        padding: 15px;
+    }
+
+    .order-details-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .order-footer-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .order-pay-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .pay-now-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .wishlist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-container {
+        padding: 0 15px;
+    }
+
+    .profile-sidebar {
+        padding: 20px;
+    }
+
+    .profile-nav-btn {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .profile-review-header {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

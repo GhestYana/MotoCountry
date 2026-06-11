@@ -47,7 +47,7 @@ module.exports.registerService = async (email, first_name, last_name, role, phon
     const authToken = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       SECRET_KEY,
-      { expiresIn: '2d' }
+      { expiresIn: '30d' }
     );
 
     let transporter = nodemailer.createTransport({
@@ -100,7 +100,7 @@ module.exports.verifyEmailService = async (token) => {
     const authToken = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       SECRET_KEY,
-      { expiresIn: '2d' }
+      { expiresIn: '30d' }
     );
 
     return { token: authToken, user };
@@ -156,13 +156,9 @@ module.exports.loginService = async (email, password) => {
     if (user.is_blocked) throw new Error('Ваш обліковий запис заблоковано');
 
     const token = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        role: user.role
-      },
+      { id: user.id, email: user.email, role: user.role },
       SECRET_KEY,
-      { expiresIn: '2d' }
+      { expiresIn: '30d' }
     );
     const addToken = `UPDATE users SET token = $1 WHERE id = $2`;
     await db.query(addToken, [token, user.id]);

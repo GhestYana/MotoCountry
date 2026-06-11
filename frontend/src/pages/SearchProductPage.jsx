@@ -144,7 +144,7 @@ const SearchPage = () => {
                 image={product.image || 'https://via.placeholder.com/300x200?text=Product'}
                 type={product.type}
                 model={product.name}
-                price={`${product.price} грн`}
+                price={product.price}
                 average_rating={product.average_rating}
                 details={[
                   { label: "Бренд", value: product.brand || '-' }

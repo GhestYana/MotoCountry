@@ -26,7 +26,7 @@ const VerificationSuccessPage = () => {
           <CheckCircle2 size={80} color="#4ade80" />
         </div>
         <h1 className="register-title">Успіх!</h1>
-        <p style={{ color: '#fff', fontSize: '1.2rem', margin: '20px 0', lineHeight: '1.6' }}>
+        <p style={{ color: 'var(--text)', fontSize: '1.2rem', margin: '20px 0', lineHeight: '1.6' }}>
           Ваш емейл успішно підтверджено! <br />
           Тепер ви можете користуватися всіма можливостями MotoCountry.
         </p>

@@ -50,6 +50,22 @@ app.use('/api/users', userRoutes);
 
 app.use('/static', express.static('static'));
 
+// Проксі для MinIO — щоб картинки вантажились через 5000 порт, а не 9000 (фікс localhost проблем)
+const { minioClient } = require('./config/minio');
+app.get(/^\/api\/images\/([^\/]+)\/(.+)$/, async (req, res) => {
+  try {
+    const bucket = req.params[0];
+    const objectName = req.params[1];
+    const stat = await minioClient.statObject(bucket, objectName);
+    res.set('Content-Type', stat.metaData['content-type'] || 'image/webp');
+    const dataStream = await minioClient.getObject(bucket, objectName);
+    dataStream.pipe(res);
+  } catch (err) {
+    console.error(`[Proxy Error] ${req.params[0]}:`, err.message);
+    res.status(404).send('Image not found');
+  }
+});
+
 // app.get('/api/test', async (req, res) => {
 //   const result = await pool.query('SELECT NOW()');
 //   res.json(result.rows[0]);

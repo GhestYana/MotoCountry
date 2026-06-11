@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCurrency } from '../hooks/useCurrency';
 import '../styles/CartItemsPage.css';
 
 const CartItemsPage = () => {
+  const { format } = useCurrency();
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -217,8 +219,13 @@ const CartItemsPage = () => {
         <div className="cart-content">
           <div className="cart-items-list">
             {cartItems.map((item) => (
-              <div key={item.cart_item_id || item.id} className="cart-item-row">
-                <div className="item-img-container">
+              <div
+                key={item.cart_item_id || item.id}
+                className="cart-item-row"
+                onClick={() => item.category && item.id && navigate(`/product/${item.category}/${item.id}`)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="item-img-container" onClick={(e) => e.stopPropagation()}>
                   <img src={getImageUrl(item.image)} alt={getItemLabel(item)} />
                 </div>
 
@@ -226,7 +233,7 @@ const CartItemsPage = () => {
                   {getItemLabel(item)}
                 </div>
 
-                <div className="quantity-cell">
+                <div className="quantity-cell" onClick={(e) => e.stopPropagation()}>
                   <button
                     className="qty-btn"
                     onClick={() => handleUpdateQuantity(item.cart_item_id, item.quantity - 1)}
@@ -242,19 +249,9 @@ const CartItemsPage = () => {
                   </button>
                 </div>
 
-                <div className="price-cell">
-                  {(() => {
-                    const numeric = typeof item.price === 'string'
-                      ? parseFloat(item.price.replace(/[^\d.]/g, ''))
-                      : item.price;
-                    return (numeric || 0).toLocaleString('uk-UA', { 
-                      minimumFractionDigits: 2, 
-                      maximumFractionDigits: 2 
-                    }).replace(',', '.') + ' ₴';
-                  })()}
-                </div>
+                <div className="price-cell">{format(item.price)}</div>
 
-                <div className="remove-cell">
+                <div className="remove-cell" onClick={(e) => e.stopPropagation()}>
                   <button className="delete-btn" onClick={() => handleRemoveItem(item.cart_item_id)}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M3 6h18m-2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
@@ -269,11 +266,11 @@ const CartItemsPage = () => {
             <h2>Підсумок замовлення</h2>
             <div className="summary-row">
               <span>Товари ({cartItems.length}):</span>
-              <span>{calculateTotal().toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} ₴</span>
+              <span>{format(calculateTotal())}</span>
             </div>
             <div className="summary-row total">
               <span>Разом:</span>
-              <span>{calculateTotal().toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} ₴</span>
+              <span>{format(calculateTotal())}</span>
             </div>
             <button className="checkout-btn" onClick={() => navigate('/checkout')}>Оформити замовлення</button>
           </div>

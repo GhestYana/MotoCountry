@@ -17,7 +17,6 @@ module.exports.registerController = async (req, res) => {
 };
 
 
-
 module.exports.verifyEmailController = async (req, res) => {
   const { token } = req.params;
   try {
@@ -28,7 +27,6 @@ module.exports.verifyEmailController = async (req, res) => {
     res.redirect(`http://localhost:5173/?error=${encodeURIComponent(error.message)}`);
   }
 };
-
 
 module.exports.loginController = async (req, res) => {
   const { email, password } = req.body;

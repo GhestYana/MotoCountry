@@ -9,6 +9,7 @@ const {
     getUserOrdersController,
     getOrderPaymentController,
     getOrderItemsController,
+    deleteOrderController,
 } = require('../controllers/orderController');
 
 router.get('/my-orders', isClientLogged, getUserOrdersController);
@@ -18,5 +19,6 @@ router.get('/:id/items', isClientLogged, getOrderItemsController);
 router.get('/', isClientLogged, isAdmin, getOrdersController);
 router.get('/:id', isClientLogged, isAdmin, getOrderController);
 router.patch('/:id/status', isClientLogged, isAdmin, updateOrderStatusController);
+router.delete('/:id', isClientLogged, isAdmin, deleteOrderController);
 
 module.exports = router;

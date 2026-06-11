@@ -98,7 +98,11 @@ module.exports.getCartItemsService = async (userId) => {
         p.id as product_id,
         p.name as title,
         p.price as price,
-        p.image,
+        CASE 
+          WHEN p.image LIKE '{%}' THEN 
+            TRIM(BOTH '"' FROM SPLIT_PART(TRIM(LEADING '{' FROM TRIM(TRAILING '}' FROM p.image)), ',', 1))
+          ELSE p.image
+        END as image,
         p.brand,
         (SELECT ROUND(AVG(rating), 1) FROM product_reviews WHERE equipment_id = p.id) as average_rating
       FROM cart_items ci
@@ -114,7 +118,7 @@ module.exports.getCartItemsService = async (userId) => {
         a.id as product_id,
         a.name as title,
         a.price as price,
-        a.image,
+        (a.image)[1] as image,
         a.brand,
         (SELECT ROUND(AVG(rating), 1) FROM product_reviews WHERE component_id = a.id) as average_rating
       FROM cart_items ci

@@ -1,54 +1,71 @@
 const db = require('../db');
+const { normalizeImage } = require('../utils/imageHelper');
 
 module.exports.searchProductService = async (query, filters = {}) => {
   if (!query && Object.keys(filters).length === 0) return [];
 
   const { brand, minPrice, maxPrice, category, sort } = filters;
-  const params = [];
-  let paramIdx = 1;
 
-  const buildQuery = (tableName, catName) => {
-    let whereClause = `WHERE 1=1 `;
-    if (query) {
-      whereClause += `AND name ILIKE $${paramIdx++} `;
-      params.push(`%${query}%`);
-    }
-    if (brand) {
-      whereClause += `AND brand = $${paramIdx++} `;
-      params.push(brand);
-    }
-    if (minPrice) {
-      whereClause += `AND price >= $${paramIdx++} `;
-      params.push(minPrice);
-    }
-    if (maxPrice) {
-      whereClause += `AND price <= $${paramIdx++} `;
-      params.push(maxPrice);
-    }
+  const conditions = [];
+  const values = [];
+
+  if (query) {
+    values.push(`%${query}%`);
+    conditions.push(`(name ILIKE $${values.length} OR brand ILIKE $${values.length})`);
+  }
+  if (brand) {
+    values.push(`%${brand}%`);
+    conditions.push(`brand ILIKE $${values.length}`);
+  }
+  if (minPrice) {
+    values.push(Number(minPrice));
+    conditions.push(`price >= $${values.length}`);
+  }
+  if (maxPrice) {
+    values.push(Number(maxPrice));
+    conditions.push(`price <= $${values.length}`);
+  }
+
+  const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  const buildSub = (table, cat, reviewCol) => {
+    // prod_components має image як text[] (масив), prod_equipment — text з {url1,url2}
+    // В обох випадках беремо перший елемент через SQL або повертаємо як є
+    const imageExpr = (table === 'prod_components')
+      ? `(image)[1]`
+      : `image`; // для equipment нормалізуємо в JS після запиту
 
     return `
-      SELECT id, name, price, image, brand, availability, type, '${catName}' AS category,
-        (SELECT ROUND(AVG(rating), 1) FROM product_reviews WHERE 
-          ${catName === 'motorcycle' ? 'motorcycle_id' : catName === 'equipment' ? 'equipment_id' : 'component_id'} = ${tableName}.id) as average_rating
-      FROM ${tableName}
-      ${whereClause}
+      SELECT id, name, price, ${imageExpr} AS image, brand,
+             availability::text AS availability,
+             type::text AS type,
+             '${cat}' AS category,
+             (SELECT ROUND(AVG(rating), 1) FROM product_reviews
+              WHERE ${reviewCol} = ${table}.id) AS average_rating
+      FROM ${table}
+      ${where}
     `;
   };
 
-  let sql = "";
-  const queries = [];
+  const parts = [];
+  if (!category || category === 'motorcycle')
+    parts.push(buildSub('prod_motorcycles', 'motorcycle', 'motorcycle_id'));
+  if (!category || category === 'equipment')
+    parts.push(buildSub('prod_equipment', 'equipment', 'equipment_id'));
+  if (!category || category === 'component')
+    parts.push(buildSub('prod_components', 'component', 'component_id'));
 
-  if (!category || category === 'motorcycle') queries.push(buildQuery('prod_motorcycles', 'motorcycle'));
-  if (!category || category === 'equipment') queries.push(buildQuery('prod_equipment', 'equipment'));
-  if (!category || category === 'component') queries.push(buildQuery('prod_components', 'component'));
+  if (parts.length === 0) return [];
 
-  sql = queries.join('\n UNION ALL \n');
+  let sql = parts.join('\nUNION ALL\n');
 
-  if (sort) {
-    if (sort === 'price_asc') sql += ` ORDER BY price ASC`;
-    else if (sort === 'price_desc') sql += ` ORDER BY price DESC`;
-  }
+  if (sort === 'price_asc') sql += ' ORDER BY price ASC';
+  if (sort === 'price_desc') sql += ' ORDER BY price DESC';
 
-  const result = await db.query(sql, params);
-  return result.rows;
+  const result = await db.query(sql, values);
+  // Нормалізуємо image для equipment (рядок {url1,url2} → перший url)
+  return result.rows.map(row => ({
+    ...row,
+    image: normalizeImage(row.image),
+  }));
 };

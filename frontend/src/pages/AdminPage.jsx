@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Routes, Route, useNavigate } from 'react-router-dom';
-import { Check, X, Lock, Unlock } from 'lucide-react';
+import { Check, X, Lock, Unlock, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
+import { useCurrency } from '../hooks/useCurrency';
 import '../styles/AdminPage.css';
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return 'https://via.placeholder.com/40x40?text=?';
+  if (imagePath.startsWith('http')) return imagePath;
+  if (imagePath.startsWith('/')) return imagePath;
+  return `/${imagePath}`;
+};
 
 const AdminProductModal = ({ isOpen, onClose, onSave, product, category }) => {
   const [formData, setFormData] = useState({
@@ -52,7 +60,7 @@ const AdminProductModal = ({ isOpen, onClose, onSave, product, category }) => {
                   <input value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
                 </div>
                 <div className="form-group">
-                  <label>Ціна (грн)*</label>
+                  <label>Ціна (USD)*</label>
                   <input type="number" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} required />
                 </div>
                 <div className="form-group">
@@ -353,6 +361,7 @@ const AdminUsers = () => {
 };
 
 const AdminOrders = () => {
+  const { format } = useCurrency();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -395,6 +404,55 @@ const AdminOrders = () => {
     }
   };
 
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
+  const [orderItems, setOrderItems] = useState({});
+  const [loadingItems, setLoadingItems] = useState({});
+
+  const handleToggleOrderItems = async (orderId) => {
+    if (expandedOrderId === orderId) {
+      setExpandedOrderId(null);
+      return;
+    }
+    setExpandedOrderId(orderId);
+
+    if (orderItems[orderId]) return;
+
+    const token = localStorage.getItem('token');
+    setLoadingItems(prev => ({ ...prev, [orderId]: true }));
+    try {
+      const res = await fetch(`/api/orders/${orderId}/items`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setOrderItems(prev => ({ ...prev, [orderId]: data }));
+      }
+    } catch (err) {
+      console.error('Error fetching order items:', err);
+    } finally {
+      setLoadingItems(prev => ({ ...prev, [orderId]: false }));
+    }
+  };
+
+  const handleDeleteOrder = async (orderId) => {
+    if (!window.confirm('Ви впевнені, що хочете видалити це замовлення?')) return;
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        fetchOrders();
+      } else {
+        const data = await res.json();
+        alert(data.message || 'Помилка при видаленні замовлення');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const translateStatus = (status) => {
     const translations = {
       'pending': 'Створено',
@@ -428,32 +486,75 @@ const AdminOrders = () => {
           </thead>
           <tbody>
             {orders.map(o => (
-              <tr key={o.id}>
-                <td><small>{o.id.slice(0, 8)}</small></td>
-                <td>{o.first_name} {o.last_name}<br /><small>{o.phone}</small></td>
-                <td>{new Date(o.created_at).toLocaleDateString()}</td>
-                <td>{o.total_price} грн</td>
-                <td>
-                  <span className={`status-badge status-${o.status}`}>
-                    {translateStatus(o.status)}
-                  </span>
-                </td>
-                <td>
-                  <select
-                    value={o.status}
-                    onChange={(e) => handleStatusUpdate(o.id, e.target.value)}
-                    className="admin-status-select"
-                  >
-                    <option value="pending">Створено (pending)</option>
-                    <option value="confirmed">Створено (confirmed)</option>
-                    <option value="paid">Оплачено</option>
-                    <option value="sent">Відправлено</option>
-                    <option value="collected">Зібрано</option>
-                    <option value="completed">Виконано</option>
-                    <option value="cancelled">Скасовано</option>
-                  </select>
-                </td>
-              </tr>
+              <React.Fragment key={o.id}>
+                <tr>
+                  <td>
+                    <button className="expand-row-btn" onClick={() => handleToggleOrderItems(o.id)}>
+                      {expandedOrderId === o.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    </button>
+                    <small>{o.id.slice(0, 8)}</small>
+                  </td>
+                  <td>{o.first_name} {o.last_name}<br /><small>{o.phone}</small></td>
+                  <td>{new Date(o.created_at).toLocaleDateString()}</td>
+                  <td>{format(o.total_price)}</td>
+                  <td>
+                    <span className={`status-badge status-${o.status}`}>
+                      {translateStatus(o.status)}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="table-actions">
+                      <select
+                        value={o.status}
+                        onChange={(e) => handleStatusUpdate(o.id, e.target.value)}
+                        className="admin-status-select"
+                      >
+                        <option value="pending">Створено (pending)</option>
+                        <option value="confirmed">Створено (confirmed)</option>
+                        <option value="paid">Оплачено</option>
+                        <option value="sent">Відправлено</option>
+                        <option value="collected">Зібрано</option>
+                        <option value="completed">Виконано</option>
+                        <option value="cancelled">Скасовано</option>
+                      </select>
+                      <button
+                        className="order-del-btn"
+                        onClick={() => handleDeleteOrder(o.id)}
+                        title="Видалити замовлення"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {expandedOrderId === o.id && (
+                  <tr className="expanded-order-items">
+                    <td colSpan="6">
+                      <div className="admin-order-items">
+                        {loadingItems[o.id] ? (
+                          <p>Завантаження товарів...</p>
+                        ) : (orderItems[o.id] || []).length === 0 ? (
+                          <p>Товари не знайдено</p>
+                        ) : (
+                          <div className="admin-items-grid">
+                            {(orderItems[o.id] || []).map(item => (
+                              <div key={item.cart_item_id} className="admin-item-detail">
+                                <img src={getImageUrl(item.image)} alt={item.title} />
+                                <div className="item-info">
+                                  <p className="item-title">{item.title}</p>
+                                  <p className="item-meta">{item.brand} | {item.category}</p>
+                                  <p className="item-qty">К-сть: {item.quantity} шт.</p>
+                                  <p className="item-price">{format(item.price)} (разом: {format(item.price * item.quantity)})</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
             ))}
           </tbody>
         </table>
@@ -463,6 +564,7 @@ const AdminOrders = () => {
 };
 
 const AdminProducts = () => {
+  const { format } = useCurrency();
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState('motorcycles');
   const [loading, setLoading] = useState(true);
@@ -556,9 +658,9 @@ const AdminProducts = () => {
             {products.map(p => (
               <tr key={p.id}>
                 <td><small>{p.id}</small></td>
-                <td><img src={p.image} alt="" className="admin-table-img" /></td>
+                <td><img src={getImageUrl(p.image)} alt="" className="admin-table-img" /></td>
                 <td>{p.name}</td>
-                <td>{p.price} грн</td>
+                <td>{format(p.price)}</td>
                 <td>{p.brand}</td>
                 <td>
                   <div className="table-actions">

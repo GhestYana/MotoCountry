@@ -6,8 +6,10 @@ import { Package, MessageSquare, Bell, Settings, LogOut, CreditCard, Star, X, Ch
 import '../styles/ProfilePage.css';
 
 import { openLiqPayCheckout } from '../utils/liqpayCheckout';
+import { useCurrency } from '../hooks/useCurrency';
 
 const ProfilePage = () => {
+    const { format } = useCurrency();
     const [activeTab, setActiveTab] = useState('orders');
     const [orders, setOrders] = useState([]);
     const [favorites, setFavorites] = useState([]);
@@ -374,7 +376,7 @@ const ProfilePage = () => {
                                                                         <div className="order-item-right">
                                                                             <span className="order-item-qty">× {item.quantity}</span>
                                                                             <span className="order-item-price">
-                                                                                {(Number(item.price) * item.quantity).toLocaleString('uk-UA')} ₴
+                                                                                {format(Number(item.price) * item.quantity)}
                                                                             </span>
                                                                         </div>
                                                                     </div>
@@ -385,7 +387,7 @@ const ProfilePage = () => {
 
                                                     <div className="order-footer-flex">
                                                         <div className="order-total-price">
-                                                            {Number(order.total_price).toLocaleString()} ₴
+                                                            {format(order.total_price)}
                                                         </div>
                                                         {order.status === 'pending' && order.payment_method === 'card' && (
                                                             <div className="order-pay-actions">

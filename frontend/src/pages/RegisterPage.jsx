@@ -12,6 +12,7 @@ const RegisterPage = () => {
     email: '',
     password: ''
   });
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -22,6 +23,7 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -30,14 +32,15 @@ const RegisterPage = () => {
         },
         body: JSON.stringify(formData)
       });
-      if (!response.ok) {
-        throw new Error('Registration failed');
-      }
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
       console.log('Registration successful:', data);
       navigate('/registration-confirm');
     } catch (error) {
       console.error('Registration error:', error);
+      setError(error.message);
     }
   };
 
@@ -102,9 +105,10 @@ const RegisterPage = () => {
             />
           </div>
           <button type="submit" className="register-button">Register</button>
+          {error && <p className="register-error">{error}</p>}
         </form>
-        <div className="login-link">
-          Already have an account? <Link to="/login">Login</Link>
+        <div className="login-link" style={{ marginTop: '1.5rem' }}>
+          Вже маєте акаунт? <Link to="/login">Увійти</Link>
         </div>
       </div>
     </div>

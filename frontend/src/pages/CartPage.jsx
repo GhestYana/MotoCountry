@@ -7,9 +7,11 @@ import ukrpostaLogo from '../data/ukrposta.png';
 import meestLogo from '../data/meest.png';
 import dhlLogo from '../data/dhl.png';
 import fedexLogo from '../data/fedEx.png';
+import { useCurrency } from '../hooks/useCurrency';
 import '../styles/CartPage.css';
 
 const CheckoutPage = () => {
+    const { format } = useCurrency();
     const navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
     const [formData, setFormData] = useState({
@@ -176,7 +178,7 @@ const CheckoutPage = () => {
                         } else {
                             navigate('/cart-items');
                         }
-                    } catch (payError) {
+                    } catch {
                         alert('Помилка оплати');
                     }
                 } else {
@@ -186,10 +188,22 @@ const CheckoutPage = () => {
             } else {
                 alert('Помилка: ' + (result.message || 'Спробуйте пізніше.'));
             }
-        } catch (error) {
+        } catch {
             alert('Помилка сервера');
         }
     };
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        return (
+            <div className="checkout-container empty">
+                <h2>Оформлення замовлення доступне тільки авторизованим користувачам</h2>
+                <p>Увійдіть у свій обліковий запис, щоб продовжити.</p>
+                <button onClick={() => navigate('/login')}>Увійти</button>
+            </div>
+        );
+    }
 
     if (cartItems.length === 0) {
         return (
@@ -384,6 +398,11 @@ const CheckoutPage = () => {
                                     <span className="pay-icon"><CreditCard size={20} /></span>
                                     <span className="pay-text">Картою онлайн</span>
                                 </label>
+                                <label className={`payment-card ${formData.paymentMethod === 'gpay' ? 'active' : ''}`}>
+                                    <input type="radio" name="paymentMethod" value="gpay" checked={formData.paymentMethod === 'gpay'} onChange={handleChange} />
+                                    <span className="pay-icon"><Smartphone size={20} /></span>
+                                    <span className="pay-text">Google Pay</span>
+                                </label>
                                 <label className={`payment-card ${formData.paymentMethod === 'cash' ? 'active' : ''}`}>
                                     <input type="radio" name="paymentMethod" value="cash" checked={formData.paymentMethod === 'cash'} onChange={handleChange} />
                                     <span className="pay-icon"><Banknote size={20} /></span>
@@ -408,11 +427,14 @@ const CheckoutPage = () => {
                             <h3>Ваше замовлення</h3>
                             <div className="summary-items">
                                 {cartItems.map(item => (
-                                    <div key={item.cart_item_id || item.id} className="summary-item">
+                                    <div
+                                        key={item.cart_item_id || item.id}
+                                        className="summary-item"
+                                        onClick={() => item.category && item.id && navigate(`/product/${item.category}/${item.id}`)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
                                         <span className="item-name">{item.title || item.model} x{item.quantity}</span>
-                                        <span className="item-price">
-                                            {((typeof item.price === 'string' ? parseFloat(item.price.replace(/[^\d.]/g, '')) : item.price) * (item.quantity || 1)).toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} ₴
-                                        </span>
+                                        <span className="item-price">{format((typeof item.price === 'string' ? parseFloat(item.price.replace(/[^\d.]/g, '')) : item.price) * (item.quantity || 1))}</span>
                                     </div>
                                 ))}
                             </div>
@@ -423,7 +445,7 @@ const CheckoutPage = () => {
                                 </div>
                                 <div className="total-row final">
                                     <span>Всього до оплати:</span>
-                                    <span>{calculateTotal().toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} ₴</span>
+                                    <span>{format(calculateTotal())}</span>
                                 </div>
                             </div>
                             <button type="submit" className="confirm-order-btn">Підтвердити замовлення</button>

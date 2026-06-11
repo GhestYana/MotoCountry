@@ -3,7 +3,7 @@ const router = express.Router();
 const { isClientLogged } = require('../middleware/isClientLogged');
 const { createCartController, getCartController, updateCartController, deleteCartController, liqPayCallbackController, confirmPaymentController } = require('../controllers/cartController');
 
-router.post('/create', createCartController);
+router.post('/create', isClientLogged, createCartController);
 router.post('/callback', liqPayCallbackController);
 router.post('/payment-confirm', confirmPaymentController);
 router.get('/', isClientLogged, getCartController);

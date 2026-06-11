@@ -1,4 +1,5 @@
 const db = require('../db');
+const { normalizeImage } = require('../utils/imageHelper');
 
 const ORDER_STATUSES = [
     'pending',
@@ -70,13 +71,15 @@ module.exports.getUserOrders = async (userId) => {
     return result.rows;
 };
 
-module.exports.getOrderItems = async (orderId, userId) => {
-    // Перевіряємо що замовлення належить цьому користувачу
-    const ownerCheck = await db.query(
-        'SELECT id FROM carts WHERE id = $1 AND user_id = $2 AND total_price > 0',
-        [orderId, userId]
-    );
-    if (ownerCheck.rows.length === 0) return null;
+module.exports.getOrderItems = async (orderId, userId, userRole) => {
+    // Перевіряємо що замовлення належить цьому користувачу або користувач адмін
+    if (userRole !== 'admin') {
+        const ownerCheck = await db.query(
+            'SELECT id FROM carts WHERE id = $1 AND user_id = $2 AND total_price > 0',
+            [orderId, userId]
+        );
+        if (ownerCheck.rows.length === 0) return null;
+    }
 
     const sql = `
         SELECT
@@ -116,17 +119,20 @@ module.exports.getOrderItems = async (orderId, userId) => {
             c.id AS product_id,
             c.name AS title,
             c.price,
-            c.image,
+            (c.image)[1] AS image,
             c.brand
         FROM cart_items ci
         JOIN prod_components c ON c.id = ci.prod_components_id
         WHERE ci.cart_id = $1
     `;
     const result = await db.query(sql, [orderId]);
-    return result.rows;
+    return result.rows.map(row => ({
+        ...row,
+        image: normalizeImage(row.image)
+    }));
 };
 
-const { sendStatusUpdateEmail } = require('../utils/emailService');
+const { sendStatusUpdateEmail, sendOrderEmail } = require('../utils/emailService');
 const { createNotification } = require('./notificationService');
 
 module.exports.updateOrderStatus = async (orderId, status) => {
@@ -175,8 +181,28 @@ module.exports.setOrderPaymentStatus = async (liqpayOrderId, liqpayStatus) => {
         }
 
         if (updatedOrder.email) {
-            sendStatusUpdateEmail(updatedOrder.email, updatedOrder.id, status)
-                .catch(err => console.error('Email error:', err));
+            const items = await module.exports.getOrderItems(updatedOrder.id, updatedOrder.user_id, 'admin'); // Pass admin to bypass check
+            sendStatusUpdateEmail(updatedOrder.email, updatedOrder.id, status, items, updatedOrder.total_price)
+                .catch(err => console.error('Customer email error:', err));
+            
+            // Notify store owner when order is PAID
+            if (status === 'paid') {
+                sendOrderEmail({ 
+                   firstName: updatedOrder.first_name, 
+                   lastName: updatedOrder.last_name, 
+                   phone: updatedOrder.phone, 
+                   email: updatedOrder.email, 
+                   city: updatedOrder.city, 
+                   delivery: updatedOrder.delivery, 
+                   address: updatedOrder.address, 
+                   branch: updatedOrder.branch, 
+                   paymentMethod: updatedOrder.payment_method, 
+                   comment: "ОПЛАТА ПІДТВЕРДЖЕНА (LiqPay)", 
+                   totalPrice: updatedOrder.total_price, 
+                   items: items, 
+                   status: 'paid' 
+                }).catch(err => console.error('Store payment notification error:', err));
+            }
         }
     }
 
@@ -185,6 +211,15 @@ module.exports.setOrderPaymentStatus = async (liqpayOrderId, liqpayStatus) => {
 
 module.exports.getInitialOrderStatus = (paymentMethod) => {
     return 'pending';
+};
+
+module.exports.deleteOrder = async (orderId) => {
+    // Спочатку видаляємо елементи замовлення
+    await db.query('DELETE FROM cart_items WHERE cart_id = $1', [orderId]);
+    // Потім видаляємо саме замовлення
+    const sql = 'DELETE FROM carts WHERE id = $1 AND total_price > 0 RETURNING *';
+    const result = await db.query(sql, [orderId]);
+    return result.rows[0] || null;
 };
 
 module.exports.isOrderRow = isOrderRow;

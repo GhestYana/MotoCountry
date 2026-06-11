@@ -8,7 +8,35 @@ import {
   isProductFavorite,
   isAuthenticated,
 } from '../utils/favoritesStorage';
+import { useCurrency } from '../hooks/useCurrency';
 import './MotorcycleCard.css';
+
+const normalizeImage = (image) => {
+  if (!image) return null;
+  if (Array.isArray(image)) return image[0] || null;
+  if (typeof image === 'string') {
+    const trimmed = image.trim();
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      const inner = trimmed.slice(1, -1);
+      const parts = inner.match(/(?:[^,"]+|"[^"]*")+/g) || [];
+      const first = parts[0]?.replace(/^"|"$/g, '').trim();
+      return first || null;
+    }
+    // TEXT колонка с несколькими URL через запятую
+    if (trimmed.includes(',')) {
+      return trimmed.split(',')[0].trim() || null;
+    }
+    return trimmed || null;
+  }
+  return null;
+};
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return 'https://via.placeholder.com/300x200?text=No+Image';
+  if (imagePath.startsWith('http')) return imagePath;
+  if (imagePath.startsWith('/')) return imagePath;
+  return `/${imagePath}`;
+};
 
 const ProductCard = ({
   id,
@@ -21,6 +49,8 @@ const ProductCard = ({
   availability,
   average_rating
 }) => {
+  const { format } = useCurrency();
+  const imageUrl = getImageUrl(normalizeImage(image));
   const [isFavorite, setIsFavorite] = useState(false);
   const [isCart, setIsCart] = useState(false);
   const navigate = useNavigate();
@@ -93,7 +123,7 @@ const ProductCard = ({
           cart[existingIndex].quantity =
             (cart[existingIndex].quantity || 0) + 1;
         } else {
-          cart.push({ id, image, type, model, price, details, category, quantity: 1 });
+          cart.push({ id, image: imageUrl, type, model, price, details, category, quantity: 1 });
         }
       } else {
         cart = cart.filter(item => String(item.id) !== String(id));
@@ -202,7 +232,7 @@ const ProductCard = ({
         ),
         {
           id,
-          image,
+          image: imageUrl,
           type,
           model,
           name: model,
@@ -258,7 +288,7 @@ const ProductCard = ({
     <div className="moto-card-wrapper">
       <div className="moto-card" onClick={handleCardClick}>
         <div className="moto-card-image">
-          <img src={image} alt={model} />
+          <img src={imageUrl} alt={model} />
         </div>
 
         <div className="moto-card-content">
@@ -271,7 +301,7 @@ const ProductCard = ({
           </div>
 
           <div className="moto-card-model">{model}</div>
-          <div className="moto-card-price">{price}</div>
+          <div className="moto-card-price">{format(price)}</div>
 
           <div className="moto-card-details">
             {details?.map((detail, index) => (

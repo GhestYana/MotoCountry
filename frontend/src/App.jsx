@@ -15,6 +15,8 @@ import CheckoutPage from './pages/CartPage';
 import SearchPage from './pages/SearchProductPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import AdminPage from './pages/AdminPage';
+import CurrencyProvider from './contexts/CurrencyContext';
+import ThemeProvider from './contexts/ThemeContext';
 
 import MotoPage from './pages/MotoPage';
 import EquipmentPage from './pages/EquipmentPage';
@@ -22,6 +24,7 @@ import ComponentsPage from './pages/ComponentsPage';
 import FavoritesPage from './pages/FavoritesPage';
 import ProfilePage from './pages/ProfilePage';
 import AddReviewPage from './pages/AddReviewPage';
+import FlyingCircles from './components/FlyingCircles';
 
 // Placeholder components for missing pages
 const Moto = () => <h1>Moto Details Page</h1>;
@@ -66,7 +69,10 @@ function App() {
   }, []);
 
   return (
+    <ThemeProvider>
+    <CurrencyProvider>
     <Router>
+      <FlyingCircles />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -91,6 +97,8 @@ function App() {
         <Route path="/admin/*" element={<AdminPage />} />
       </Routes>
     </Router>
+    </CurrencyProvider>
+    </ThemeProvider>
     //     {/* <div className = "head">
     //         <div className = "storeName">
     //      <span>moto</span>

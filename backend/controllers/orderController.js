@@ -5,6 +5,7 @@ const {
     ORDER_STATUSES,
     getUserOrders,
     getOrderItems,
+    deleteOrder,
 } = require('../services/orderService');
 const { createNotification } = require('../services/notificationService');
 const { sendStatusUpdateEmail } = require('../utils/emailService');
@@ -75,7 +76,8 @@ module.exports.updateOrderStatusController = async (req, res) => {
 
             // Email notification
             if (order.email) {
-                await sendStatusUpdateEmail(order.email, id, status);
+                const items = await getOrderItems(id, order.user_id, 'admin');
+                await sendStatusUpdateEmail(order.email, id, status, items, order.total_price);
             }
         }
 
@@ -97,13 +99,28 @@ module.exports.getOrderItemsController = async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.user.id;
-        const items = await getOrderItems(id, userId);
+        const userRole = req.user.role;
+        const items = await getOrderItems(id, userId, userRole);
         if (items === null) {
             return res.status(404).json({ message: 'Order not found' });
         }
         res.status(200).json(items);
     } catch (error) {
         console.error('Get order items error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+module.exports.deleteOrderController = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await deleteOrder(id);
+        if (!result) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+        res.status(200).json({ message: 'Order deleted successfully' });
+    } catch (error) {
+        console.error('Delete order error:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };

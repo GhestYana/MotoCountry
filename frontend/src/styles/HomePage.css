@@ -1,148 +1,664 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
-
-.video {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
 
 .home-container {
   min-height: 100vh;
-  background-color: #000;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
+  background: transparent;
+  color: var(--text);
+  font-family: 'Montserrat', sans-serif;
+  overflow-x: hidden;
 }
 
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  --accent: var(--neon);
+}
 
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
 
-/* Hero Slider Section */
-.hero-slider {
+.hero-glow {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  filter: blur(180px);
+  opacity: 0.1;
+  right: -150px;
+  top: -200px;
+  transition: background 0.6s ease;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+html[data-theme="light"] .hero-grid {
+  display: none;
+}
+
+.type-tabs {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 28px 6vw 0;
+}
+
+.type-tab {
+  padding: 8px 22px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.type-tab:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.type-tab.active {
+  background: var(--tab-color, var(--neon));
+  border-color: transparent;
+  color: var(--bg);
+  font-weight: 700;
+}
+
+.hero-stage {
+  position: relative;
+  z-index: 2;
   flex: 1;
   display: flex;
+  align-items: center;
+  padding: 40px 6vw 50px;
+}
+
+.hero-info {
+  flex: 0 0 320px;
+  display: flex;
   flex-direction: column;
-  align-items: center;
-  /* justify-content: center; */
-  padding: 20px 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.slider-main {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-  position: relative;
-}
-
-.side-video {
-  width: 250px;
-  height: 150px;
-  overflow: hidden;
-  border-radius: 10px;
-  opacity: 0.3;
-  filter: blur(4px) grayscale(80%);
-  transition: all 0.5s ease;
-  flex-shrink: 0;
-}
-
-.side-video video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.left-preview {
-  transform: translateX(40px) scale(0.8) perspective(500px) rotateY(20deg);
-}
-
-.right-preview {
-  transform: translateX(-40px) scale(0.8) perspective(500px) rotateY(-20deg);
-}
-
-
-.central-stage {
-  width: 600px;
-  height: 400px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stage-platform {
-  position: absolute;
-  bottom: 0;
-  width: 250px;
-  height: 30px;
-  background: radial-gradient(ellipse at center, rgba(57, 255, 20, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
-  border-radius: 50%;
-  transform: translateY(15px);
-}
-
-.moto-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  gap: 14px;
   z-index: 2;
 }
 
-.moto-image-empty {
-  width: 80%;
-  height: auto;
-  aspect-ratio: 16/9;
-  border: 1px dashed rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
+.hero-type-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  transition: color 0.4s;
+}
+
+.hero-type-desc {
+  font-size: 0.88rem;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  margin-top: -6px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+}
+
+.btn-ghost {
+  padding: 13px 28px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.hero-svg-wrap,
+.hero-photo-wrap {
+  flex: 1;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.3);
+  min-height: 520px;
+  width: 100%;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.nav-arrow {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 40px;
-  cursor: pointer;
-  opacity: 0.5;
-  transition: opacity 0.3s;
+.hero-svg-wrap.fade,
+.hero-photo-wrap.fade {
+  opacity: 0;
+  transform: scale(0.96) translateX(20px);
 }
 
-.nav-arrow:hover {
-  opacity: 1;
-}
-
-.category-title {
-  margin-top: 40px;
-  font-size: 32px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-}
-
-.slider-dots {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
+.hero-svg-glow,
+.hero-photo-glow {
+  position: absolute;
+  width: 75%;
+  height: 75%;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.2);
-  cursor: pointer;
+  filter: blur(70px);
+  opacity: 0.35;
+  transition: background 0.6s ease;
+  pointer-events: none;
 }
 
-.dot.active {
-  background-color: #fff;
-  box-shadow: 0 0 8px #fff;
+/* Neon decor SVG overlay */
+.neon-decor {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Photo Silhouette Outline */
+.hero-photo-img {
+  position: relative;
+  z-index: 2;
+  max-width: 88%;
+  max-height: 380px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  /* Original shadow */
+  filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.8));
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+/* Robust Silhouette Glow System */
+.hero-photo-img-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-photo-img {
+  position: relative;
+  z-index: 5;
+  max-width: 88%;
+  max-height: 380px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+/* Layered glow behind the motorcycle */
+.hero-photo-img-glow-layer {
+  position: absolute;
+  z-index: 4;
+  max-width: 88%;
+  max-height: 380px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: blur(15px) brightness(1.2) contrast(1.2);
+  opacity: 0.6;
+  pointer-events: none;
+  transform-origin: center;
+}
+
+/* Second, sharper glow layer */
+.hero-photo-img-glow-layer.sharp {
+  filter: blur(3px) brightness(1.5);
+  opacity: 0.4;
+  z-index: 3;
+}
+
+/* Flying neon particles */
+.neon-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 50%;
+  filter: blur(1px) drop-shadow(0 0 5px var(--accent));
+  opacity: 0.8;
+  animation: floatParticle var(--duration, 4s) linear infinite;
+  left: var(--left, 50%);
+  top: var(--top, 50%);
+}
+
+@keyframes floatParticle {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.8;
+  }
+
+  80% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate(var(--tx, 100px), var(--ty, -100px)) scale(0);
+    opacity: 0;
+  }
+}
+
+.moto-svg {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  filter: drop-shadow(0 0 12px currentColor);
+}
+
+.hero-nav {
+  position: absolute;
+  right: 6vw;
+  bottom: 50px;
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+
+.nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.hero-dots {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+  padding: 0 6vw 32px;
+}
+
+.hero-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  padding: 0;
+}
+
+.hero-dot.active {
+  width: 24px;
+  border-radius: 3px;
+}
+
+/* ── FEATURES ── */
+.features-section {
+  padding: 48px 6vw;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.feature-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 28px 24px;
+  background: var(--surface-3);
+  transition: background 0.2s;
+}
+
+.feature-card:hover {
+  background: var(--surface-2);
+}
+
+.feature-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid rgba(74, 222, 128, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neon);
+  flex-shrink: 0;
+}
+
+.feature-card h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--text);
+}
+
+.feature-card p {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── PRODUCTS ── */
+.home-products-section {
+  padding: 60px 6vw 80px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.home-products-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  margin: 0;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--neon);
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+.btn-ghost-sm {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family: 'Montserrat', sans-serif;
+  padding: 0;
+}
+
+.btn-ghost-sm:hover {
+  color: var(--neon);
+}
+
+.home-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* Skeleton */
+.home-products-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.product-skeleton-card {
+  height: 340px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .hero-stage {
+    flex-direction: column-reverse;
+    padding: 24px 5vw 40px;
+    gap: 20px;
+  }
+
+  .hero-info {
+    flex: none;
+    width: 100%;
+  }
+
+  .hero-svg-wrap,
+  .hero-photo-wrap {
+    min-height: 240px;
+    width: 100%;
+  }
+
+  .moto-svg,
+  .hero-photo-img {
+    max-width: 420px;
+    max-height: 260px;
+  }
+
+  .hero-nav {
+    right: 5vw;
+    bottom: 40px;
+  }
+
+  .home-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .type-tabs {
+    gap: 5px;
+    padding: 18px 5vw 0;
+  }
+
+  .type-tab {
+    padding: 6px 14px;
+    font-size: 0.75rem;
+  }
+
+  .moto-svg,
+  .hero-photo-img {
+    max-width: 320px;
+    max-height: 200px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .home-products-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}
+
+/* ── LIGHT THEME — subtle glow around motorcycle ── */
+html[data-theme="light"] .hero-glow {
+  opacity: 0.12;
+  filter: blur(160px);
+}
+
+html[data-theme="light"] .hero-svg-glow,
+html[data-theme="light"] .hero-photo-glow {
+  opacity: 0.2;
+  filter: blur(100px);
+}
+
+/* Підсвітка під мотоциклом — без овалу, тільки м'яке розсіювання */
+.moto-glow-ring {
+  display: none;
+}
+
+.moto-glow-floor {
+  position: absolute;
+  bottom: -2%;
+  left: 0%;
+  right: 0%;
+  height: 160px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(50px);
+  animation: floorPulse 3s ease-in-out infinite;
+  transition: background 0.5s ease;
+}
+
+@keyframes floorPulse {
+
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+html[data-theme="light"] .hero-photo-img-glow-layer {
+  filter: blur(15px) brightness(1.6) contrast(1.3);
+  opacity: 0.85;
+}
+
+html[data-theme="light"] .hero-photo-img-glow-layer.sharp {
+  filter: blur(3px) brightness(2.0);
+  opacity: 0.65;
+}
+
+@media (max-width: 480px) {
+  .hero {
+    min-height: auto;
+    padding-bottom: 20px;
+  }
+
+  .hero-type-label {
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+  }
+
+  .hero-type-desc {
+    font-size: 0.8rem;
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    padding: 11px 20px;
+    font-size: 0.85rem;
+  }
+
+  .home-products-grid,
+  .home-products-skeleton {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-dots {
+    padding: 0 5vw 20px;
+  }
+}
+
+@media (max-width: 375px) {
+  .type-tabs {
+    gap: 4px;
+  }
+
+  .type-tab {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+  }
 }

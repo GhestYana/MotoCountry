@@ -128,8 +128,8 @@ const LoginPage = () => {
               {error && <p className="login-error">{error}</p>}
             </form>
             <div className="login-link">
-              <p>Don't have an account?</p>
-              <Link to="/register">Register here</Link>
+              <p>Не маєте аккаунту?</p>
+              <Link to="/register">Зареєструватися</Link>
             </div>
           </>
         )}

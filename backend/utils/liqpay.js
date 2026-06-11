@@ -39,7 +39,7 @@ module.exports.generateLiqPayData = (amount, orderId, description, paytypes = 'c
         order_id: `${String(orderId).replace(/[^a-zA-Z0-9]/g, '')}_${Date.now()}`,
         sandbox: useSandbox ? '1' : '0',
         language: 'uk',
-        paytypes: paytypes,
+        paytypes: paytypes || 'card,gpay,apay',
     };
 
     const resultBase = (process.env.LIQPAY_RESULT_URL || process.env.FRONTEND_URL)?.trim();

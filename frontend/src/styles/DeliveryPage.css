@@ -1,7 +1,7 @@
 .delivery-container {
   min-height: 100vh;
-  background-color: #000;
-  color: #fff;
+  background-color: var(--bg);
+  color: var(--text);
   padding: 40px 20px;
   display: flex;
   justify-content: center;
@@ -15,7 +15,7 @@
 .delivery-title {
   font-size: 3rem;
   font-weight: 900;
-  color: #39FF14; /* Neon Green */
+  color: var(--neon); /* Neon Green */
   margin-bottom: 2rem;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -25,7 +25,7 @@
 .intro-text {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #ccc;
+  color: var(--muted);
   margin-bottom: 3rem;
   max-width: 800px;
 }
@@ -38,16 +38,16 @@
 }
 
 .delivery-card {
-  background: #111;
+  background: /*dark*/ var(--surface-3);
   padding: 30px;
   border-radius: 15px;
-  border: 1px solid #222;
+  border: 1px solid /*dark*/ var(--border);
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .delivery-card:hover {
   transform: translateY(-5px);
-  border-color: #39FF14;
+  border-color: var(--neon);
 }
 
 .card-icon {
@@ -58,26 +58,26 @@
 .delivery-card h3 {
   font-size: 1.4rem;
   margin-bottom: 15px;
-  color: #fff;
+  color: var(--text);
 }
 
 .delivery-card p {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #888;
+  color: var(--muted);
 }
 
 .payment-section {
-  background: linear-gradient(135deg, #111 0%, #050505 100%);
+  background: linear-gradient(135deg, /*dark*/ var(--surface-3) 0%, var(--bg) 100%);
   padding: 40px;
   border-radius: 20px;
-  border-left: 4px solid #39FF14;
+  border-left: 4px solid var(--neon);
 }
 
 .section-title {
   font-size: 2rem;
   margin-bottom: 25px;
-  color: #39FF14;
+  color: var(--neon);
 }
 
 .payment-methods {
@@ -95,22 +95,30 @@
 .dot-icon {
   width: 8px;
   height: 8px;
-  background-color: #39FF14;
+  background-color: var(--neon);
   border-radius: 50%;
-  box-shadow: 0 0 5px #39FF14;
+  box-shadow: 0 0 5px var(--neon);
 }
 
 .payment-method p {
   font-size: 1rem;
-  color: #eee;
+  color: var(--text);
 }
 
 .security-note {
   font-style: italic;
   font-size: 0.9rem;
-  color: #666;
-  border-top: 1px solid #222;
+  color: var(--muted);
+  border-top: 1px solid /*dark*/ var(--border);
   padding-top: 15px;
+}
+
+/* ── LIGHT THEME OVERRIDES ── */
+html[data-theme="light"] .delivery-card,
+html[data-theme="light"] .payment-section {
+  background: linear-gradient(145deg, rgba(240,236,230,0.98), rgba(232,228,223,0.98)) !important;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(139, 130, 118, 0.08), 0 1px 3px rgba(0,0,0,0.04);
 }
 
 @media (max-width: 768px) {

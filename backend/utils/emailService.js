@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 module.exports.sendOrderEmail = async (orderData) => {
-    const { firstName, lastName, phone, email, city, delivery, address, branch, paymentMethod, comment, totalPrice, items } = orderData;
+    const { firstName, lastName, phone, email, city, delivery, address, branch, paymentMethod, comment, totalPrice, items, status } = orderData;
 
     const itemsHtml = items.map(item => `
         <tr>
@@ -21,7 +21,7 @@ module.exports.sendOrderEmail = async (orderData) => {
 
     const mailOptions = {
         from: `"MotoCountry Store" <${process.env.EMAIL_USER}>`,
-        to: 'motostore.dp@gmail.com', // The store's email as requested
+        to: process.env.EMAIL_USER, // The store's email
         subject: `Нове замовлення від ${firstName} ${lastName}`,
         html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
@@ -39,7 +39,8 @@ module.exports.sendOrderEmail = async (orderData) => {
                     <p><strong>Місто:</strong> ${city}</p>
                     <p><strong>Служба доставки:</strong> ${delivery}</p>
                     <p><strong>Адреса/Відділення:</strong> ${address} ${branch ? `(${branch})` : ''}</p>
-                    <p><strong>Метод оплати:</strong> ${paymentMethod}</p>
+                    <p><strong>Метод оплати:</strong> ${paymentMethod === 'card' ? 'Картка (онлайн)' : paymentMethod === 'gpay' ? 'Google Pay' : 'При отриманні (готівка)'}</p>
+                    <p><strong>Статус оплати:</strong> <span style="color: ${status === 'paid' ? '#10b981' : '#ef4444'}; font-weight: bold;">${status === 'paid' ? 'ОПЛАЧЕНО' : 'Очікує оплати / При отриманні'}</span></p>
                 </section>
 
                 <section style="margin-bottom: 20px;">
@@ -85,7 +86,7 @@ module.exports.sendOrderEmail = async (orderData) => {
     }
 };
 
-module.exports.sendStatusUpdateEmail = async (userEmail, orderId, status) => {
+module.exports.sendStatusUpdateEmail = async (userEmail, orderId, status, items = [], totalPrice = 0) => {
     const statusTranslations = {
         'pending': 'Створено',
         'confirmed': 'Створено',
@@ -97,6 +98,34 @@ module.exports.sendStatusUpdateEmail = async (userEmail, orderId, status) => {
         'cancelled': 'Скасовано'
     };
     const statusText = statusTranslations[status] || status;
+
+    const itemsHtml = items.length > 0 ? `
+        <h3 style="color: #333; margin-top: 30px;">Склад замовлення:</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+            <thead>
+                <tr style="text-align: left; background: #f8f8f8;">
+                    <th style="padding: 12px; border-bottom: 2px solid #eee;">Товар</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #eee;">К-сть</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #eee;">Ціна</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${items.map(item => `
+                    <tr>
+                        <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.title || item.name}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #eee;">x${item.quantity}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.price} грн</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" style="padding: 15px; text-align: right; font-weight: bold;">Разом:</td>
+                    <td style="padding: 15px; font-size: 1.1rem; font-weight: bold; color: #ef4444; border-top: 2px solid #eee;">${totalPrice} грн</td>
+                </tr>
+            </tfoot>
+        </table>
+    ` : '';
 
     const mailOptions = {
         from: `"MotoCountry" <${process.env.EMAIL_USER}>`,
@@ -112,7 +141,10 @@ module.exports.sendStatusUpdateEmail = async (userEmail, orderId, status) => {
                         ${statusText}
                     </span>
                 </div>
-                <p>Ви можете відстежувати статус вашого замовлення в <a href="http://localhost:5173/profile" style="color: #ef4444; text-decoration: none; font-weight: bold;">особистому кабінеті</a>.</p>
+
+                ${itemsHtml}
+
+                <p style="margin-top: 25px;">Ви можете відстежувати статус вашого замовлення в <a href="http://localhost:5173/profile" style="color: #ef4444; text-decoration: none; font-weight: bold;">особистому кабінеті</a>.</p>
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
                 <p style="font-size: 0.9rem; color: #888; text-align: center;">
                     Дякуємо, що обираєте нас!<br>

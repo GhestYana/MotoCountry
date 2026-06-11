@@ -1,3 +1,4 @@
+const db = require('../db');
 const { createCart, getCart, updateCart, deleteCart } = require('../services/cartService');
 const { sendOrderEmail, sendCustomerOrderConfirmation } = require('../utils/emailService');
 const { generateLiqPayData, verifyLiqPaySignature } = require('../utils/liqpay');
@@ -9,8 +10,29 @@ module.exports.createCartController = async (req, res) => {
 
     const result = await createCart(userId, firstName, lastName, phone, email, city, delivery, address, branch, postalCode, paymentMethod, comment, totalPrice);
 
+    const cartId = result.id;
+
+    // Save order items to cart_items table
+    if (items && Array.isArray(items) && items.length > 0) {
+      await db.query('DELETE FROM cart_items WHERE cart_id = $1', [cartId]);
+      for (const item of items) {
+        let prod_motorcycles_id = null;
+        let prod_equipment_id = null;
+        let prod_components_id = null;
+
+        if (item.category === 'motorcycle') prod_motorcycles_id = item.id;
+        else if (item.category === 'equipment') prod_equipment_id = item.id;
+        else if (item.category === 'component') prod_components_id = item.id;
+
+        await db.query(
+          'INSERT INTO cart_items (cart_id, prod_motorcycles_id, prod_equipment_id, prod_components_id, quantity) VALUES ($1, $2, $3, $4, $5)',
+          [cartId, prod_motorcycles_id, prod_equipment_id, prod_components_id, item.quantity || 1]
+        );
+      }
+    }
+
     // Send email notification to store owner/manager
-    await sendOrderEmail({ firstName, lastName, phone, email, city, delivery, address, branch, paymentMethod, comment, totalPrice, items });
+    await sendOrderEmail({ firstName, lastName, phone, email, city, delivery, address, branch, paymentMethod, comment, totalPrice, items, status: result.status });
 
     // Send confirmation email to customer
     await sendCustomerOrderConfirmation({ firstName, lastName, phone, email, city, delivery, address, branch, paymentMethod, comment, totalPrice, items }, result.id);

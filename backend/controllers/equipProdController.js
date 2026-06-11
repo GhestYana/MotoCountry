@@ -6,7 +6,8 @@ module.exports.getEquipmentController = async (req, res) => {
     const result = await getEquipment(filters);
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('getEquipmentController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -16,7 +17,8 @@ module.exports.getEquipmentByIdController = async (req, res) => {
     const result = await getEquipmentById(id);
     res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('getEquipmentByIdController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -25,7 +27,8 @@ module.exports.addEquipmentController = async (req, res) => {
     const result = await addEquipment(req.body);
     res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('addEquipmentController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -35,7 +38,8 @@ module.exports.updateEquipmentController = async (req, res) => {
     const result = await updateEquipment(id, req.body);
     res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('updateEquipmentController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -45,6 +49,7 @@ module.exports.deleteEquipmentController = async (req, res) => {
     await deleteEquipment(id);
     res.json({ message: 'Equipment deleted' });
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('deleteEquipmentController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };

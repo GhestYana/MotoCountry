@@ -1,8 +1,8 @@
 .checkout-page {
-    background-color: #1a1a1a;
+    background-color: var(--surface-3);
     min-height: 100vh;
     padding: 60px 20px;
-    color: #fff;
+    color: var(--text);
 }
 
 .checkout-container {
@@ -27,14 +27,14 @@
 .back-btn {
     background: transparent;
     border: none;
-    color: #888;
+    color: var(--muted);
     cursor: pointer;
     font-size: 1rem;
     transition: color 0.3s;
 }
 
 .back-btn:hover {
-    color: #fff;
+    color: var(--text);
 }
 
 .checkout-content {
@@ -51,7 +51,7 @@
 }
 
 .checkout-section {
-    background: #242424;
+    background: var(--surface-3);
     border-radius: 16px;
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -67,7 +67,7 @@
 
 .step-num {
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
     width: 28px;
     height: 28px;
     border-radius: 50%;
@@ -96,17 +96,17 @@
 
 .form-group label {
     font-size: 0.9rem;
-    color: #888;
+    color: var(--muted);
 }
 
 .form-group input,
 .checkout-section textarea,
 .checkout-select {
-    background: #333;
-    border: 1px solid #444;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
     padding: 12px 16px;
     border-radius: 8px;
-    color: #fff;
+    color: var(--text);
     font-size: 1rem;
     transition: all 0.3s;
     width: 100%;
@@ -126,7 +126,7 @@
 .checkout-select:focus {
     outline: none;
     border-color: var(--neon);
-    background: #3a3a3a;
+    background: var(--surface-2);
 }
 
 .payment-options {
@@ -136,8 +136,8 @@
 }
 
 .payment-card {
-    background: #333;
-    border: 2px solid transparent;
+    background: var(--surface-2);
+    border: 2px solid var(--border);
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -174,7 +174,7 @@
 }
 
 .summary-card {
-    background: #242424;
+    background: var(--surface-3);
     border-radius: 16px;
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -197,7 +197,7 @@
 }
 
 .summary-items::-webkit-scrollbar-thumb {
-    background: #444;
+    background: var(--surface-2);
     border-radius: 3px;
 }
 
@@ -207,10 +207,17 @@
     padding: 12px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.summary-item:hover {
+    padding-left: 8px;
+    border-left: 2px solid var(--neon);
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .item-name {
-    color: #ccc;
+    color: var(--muted);
     max-width: 70%;
 }
 
@@ -231,7 +238,7 @@
     margin-top: 20px;
     font-size: 1.3rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text);
 }
 
 .free {
@@ -242,7 +249,7 @@
     width: 100%;
     padding: 18px;
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
     border: none;
     border-radius: 12px;
     font-size: 1.1rem;
@@ -252,7 +259,7 @@
 }
 
 .confirm-order-btn:hover {
-    background: #7cff63;
+    background: var(--neon);
     transform: translateY(-2px);
     box-shadow: var(--neon-glow);
 }
@@ -294,8 +301,8 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: #333;
-    border: 1px solid #444;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
     border-top: none;
     border-radius: 0 0 8px 8px;
     list-style: none;
@@ -320,7 +327,7 @@
 }
 
 .search-results-list li:hover {
-    background: #444;
+    background: var(--surface-2);
     color: var(--neon);
 }
 
@@ -364,10 +371,10 @@
     justify-content: center;
     gap: 8px;
     padding: 12px 16px;
-    background: #000000;
-    border: 2px solid #444;
+    background: var(--bg);
+    border: 2px solid var(--border);
     border-radius: 10px;
-    color: #aaa;
+    color: var(--muted);
     cursor: pointer;
     transition: all 0.2s;
     min-width: 100px;
@@ -376,7 +383,7 @@
 }
 
 .delivery-service-btn:hover {
-    border-color: #666;
+    border-color: var(--border-strong);
 }
 
 .delivery-service-btn.active {
@@ -401,7 +408,7 @@
 .service-label {
     font-size: 0.72rem;
     font-weight: 600;
-    color: #888;
+    color: var(--muted);
     white-space: nowrap;
     transition: color 0.2s;
 }
@@ -411,14 +418,14 @@
 }
 
 .delivery-service-btn:hover .service-label {
-    color: #fff;
+    color: var(--text);
 }
 
 /* City region hint */
 .city-region {
     display: block;
     font-size: 0.75rem;
-    color: #888;
+    color: var(--muted);
     margin-top: 2px;
 }
 
@@ -426,7 +433,7 @@
 .branch-address {
     display: block;
     font-size: 0.75rem;
-    color: #888;
+    color: var(--muted);
     margin-top: 2px;
 }
 
@@ -438,11 +445,103 @@
 /* DHL/FedEx note */
 .delivery-note {
     background: rgba(74, 222, 128, 0.06);
-    border: 1px solid rgba(74, 222, 128, 0.2);
+    border: 1px solid var(--border);
     border-radius: 8px;
     padding: 12px 16px;
-    color: #aaa;
+    color: var(--muted);
     font-size: 0.9rem;
     margin: 0;
     line-height: 1.5;
+}
+
+/* ── LIGHT THEME OVERRIDES ── */
+html[data-theme="light"] .payment-card {
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+}
+
+html[data-theme="light"] .payment-card.active {
+    border-color: var(--neon);
+    background: rgba(139, 130, 118, 0.06);
+}
+
+html[data-theme="light"] .summary-item:hover {
+    border-left: 2px solid var(--neon);
+    background: rgba(139, 130, 118, 0.06);
+}
+
+html[data-theme="light"] .delivery-service-btn.active {
+    background: rgba(139, 130, 118, 0.06);
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+    .checkout-content {
+        flex-direction: column;
+    }
+
+    .order-summary-sidebar {
+        width: 100%;
+        position: static;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: span 1;
+    }
+
+    .payment-options {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .delivery-service-grid {
+        justify-content: flex-start;
+    }
+
+    .delivery-service-btn {
+        min-width: 80px;
+        width: auto;
+        padding: 10px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout-container {
+        padding: 16px;
+    }
+
+    .checkout-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .checkout-section {
+        padding: 16px;
+    }
+
+    .payment-options {
+        grid-template-columns: 1fr;
+    }
+
+    .delivery-service-grid {
+        gap: 6px;
+    }
+
+    .delivery-service-btn {
+        min-width: 70px;
+        height: 64px;
+        font-size: 0.7rem;
+    }
+
+    .service-logo {
+        width: 48px;
+        height: 24px;
+    }
+
+    .confirm-order-btn {
+        padding: 14px;
+        font-size: 1rem;
+    }
 }

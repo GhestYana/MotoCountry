@@ -34,12 +34,16 @@ const uploadToMinio = async (file, folder = 'uploads') => {
   const useSSL = process.env.MINIO_USE_SSL === 'true';
   const protocol = useSSL ? 'https' : 'http';
 
+  const backendHost = process.env.HOST || 'localhost';
+  const backendPort = process.env.PORT || '5000';
+
   // Якщо є публічний URL (наприклад через nginx або ngrok)
   if (process.env.MINIO_PUBLIC_URL) {
     return `${process.env.MINIO_PUBLIC_URL}/${BUCKET}/${objectName}`;
   }
 
-  return `${protocol}://${endpoint}:${port}/${BUCKET}/${objectName}`;
+  // Повертаємо URL через наш проксі в index.js
+  return `${protocol}://${backendHost}:${backendPort}/api/images/${BUCKET}/${objectName}`;
 };
 
 module.exports = { upload, uploadToMinio };

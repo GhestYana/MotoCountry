@@ -6,7 +6,8 @@ module.exports.getMotorcyclesController = async (req, res) => {
     const result = await getMotorcycles(filters);
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('getMotorcyclesController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -16,7 +17,8 @@ module.exports.getMotorcycleByIdController = async (req, res) => {
     const result = await getMotorcycleById(id);
     res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('getMotorcycleByIdController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -25,7 +27,8 @@ module.exports.addMotorcycleController = async (req, res) => {
     const result = await addMotorcycle(req.body);
     res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('addMotorcycleController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -35,7 +38,8 @@ module.exports.updateMotorcycleController = async (req, res) => {
     const result = await updateMotorcycle(id, req.body);
     res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('updateMotorcycleController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -45,7 +49,8 @@ module.exports.deleteMotorcycleController = async (req, res) => {
     await deleteMotorcycle(id);
     res.json({ message: 'Motorcycle deleted successfully' });
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('deleteMotorcycleController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -54,7 +59,8 @@ module.exports.getMotorcycleBrandsController = async (req, res) => {
     const result = await getMotorcycleBrands();
     res.json(result.rows.map(r => r.brand));
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('getMotorcycleBrandsController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -63,6 +69,7 @@ module.exports.getMotorcycleColorsController = async (req, res) => {
     const result = await getMotorcycleColors();
     res.json(result.rows.map(r => r.color));
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('getMotorcycleColorsController error:', err);
+    res.status(500).json({ error: err.message });
   }
 };

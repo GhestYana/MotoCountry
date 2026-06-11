@@ -1,0 +1,48 @@
+.flying-circles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.flying-circle {
+  position: absolute;
+  background: radial-gradient(circle, var(--neon) 0%, rgba(57, 255, 20, 0) 75%);
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: float-random linear infinite;
+  opacity: 0.3;
+  will-change: transform, opacity;
+}
+
+@keyframes float-random {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  33% {
+    transform: translate(10vw, 20vh) rotate(120deg);
+  }
+
+  66% {
+    transform: translate(-10vw, 10vh) rotate(240deg);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+/* Світла тема — більш контрастні, менший blur щоб були помітні */
+html[data-theme="light"] .flying-circle {
+  background: radial-gradient(circle,
+      rgba(50, 90, 65, 1) 0%,
+      rgba(50, 90, 65, 0.4) 35%,
+      rgba(50, 90, 65, 0) 70%);
+  opacity: 0.6 !important;
+  filter: blur(20px);
+}

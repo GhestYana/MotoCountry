@@ -59,7 +59,11 @@ module.exports.getFavorites = async (userId) => {
       e.id::text as product_id,
       e.name::text as name,
       e.price::text as price,
-      e.image::text as image,
+      CASE 
+        WHEN e.image LIKE '{%}' THEN 
+          TRIM(BOTH '"' FROM SPLIT_PART(TRIM(LEADING '{' FROM TRIM(TRAILING '}' FROM e.image)), ',', 1))
+        ELSE e.image
+      END::text as image,
       e.brand::text as brand,
       CAST(e.type AS text) as type,
       e.availability::text as availability,
@@ -82,7 +86,7 @@ module.exports.getFavorites = async (userId) => {
       c.id::text as product_id,
       c.name::text as name,
       c.price::text as price,
-      c.image::text as image,
+      ((c.image)[1])::text as image,
       c.brand::text as brand,
       CAST(c.type AS text) as type,
       c.availability::text as availability,

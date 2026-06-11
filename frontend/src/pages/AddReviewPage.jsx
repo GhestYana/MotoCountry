@@ -3,6 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Star, ShoppingCart } from 'lucide-react';
 import '../styles/AddReviewPage.css';
 
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return 'https://via.placeholder.com/80x80?text=?';
+  if (imagePath.startsWith('http')) return imagePath;
+  if (imagePath.startsWith('/')) return imagePath;
+  return `/${imagePath}`;
+};
+
 const AddReviewPage = () => {
     const { category, id } = useParams();
     const navigate = useNavigate();
@@ -124,7 +131,7 @@ const AddReviewPage = () => {
                     <p>Залишити відгук можна лише після покупки цього товару.</p>
                     {product && (
                         <div className="product-miniature">
-                            <img src={product?.image} alt={product?.name} />
+                            <img src={getImageUrl(product?.image)} alt={product?.name} />
                             <div className="product-miniature-info">
                                 <h3>{product?.name}</h3>
                                 <p>{product?.brand}</p>
@@ -142,7 +149,7 @@ const AddReviewPage = () => {
             <h1>Залишити відгук</h1>
 
             <div className="product-miniature">
-                <img src={product?.image} alt={product?.name} />
+                <img src={getImageUrl(product?.image)} alt={product?.name} />
                 <div className="product-miniature-info">
                     <h3>{product?.name}</h3>
                     <p>{product?.brand}</p>

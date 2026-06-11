@@ -35,14 +35,14 @@
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 10px;
-  color: #fff;
+  color: var(--text);
 }
 
 .review-page-header p {
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 10px;
-  color: #fff;
+  color: var(--text);
 }
 
 .review-page-form {
@@ -60,30 +60,30 @@
   width: 100%;
   height: 100px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--muted);
   border-radius: 5px;
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 10px;
-  color: #fff;
-  background-color: #000;
+  color: var(--text);
+  background-color: var(--bg);
 }
 
 .review-page-form button {
   width: 100%;
   height: 50px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--muted);
   border-radius: 5px;
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 10px;
-  color: #fff;
-  background-color: #000;
+  color: var(--text);
+  background-color: var(--bg);
 }
 
 .review-page-form button:hover {
-  background-color: #39FF14;
+  background-color: var(--neon);
   cursor: pointer;
 }
 
@@ -102,195 +102,202 @@
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 10px;
-  color: #fff;
+  color: var(--text);
 }
 
 .review-page-reviews p {
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 10px;
-  color: #fff;
+  color: var(--text);
 }
 
 .review-page-reviews button {
   width: 100%;
   height: 50px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--muted);
   border-radius: 5px;
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 10px;
-  color: #fff;
-  background-color: #000;
+  color: var(--text);
+  background-color: var(--bg);
 }
 
 .review-page-reviews button:hover {
-  background-color: #39FF14;
+  background-color: var(--neon);
   cursor: pointer;
 }
 
 .review-page-reviews button:active {
-  background-color: #39FF14;
+  background-color: var(--neon);
   cursor: pointer;
 }
 
 .review-page-reviews button:disabled {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:active {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus:hover {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus:hover:active {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus:hover:active:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
 }
 
 .review-page-reviews button:disabled:focus:active:hover:focus:active:hover:active:hover:active:focus:hover:active:focus:active:hover:focus:active:hover:focus:hover:active:focus:hover:active:focus:hover:focus {
-  background-color: #000;
+  background-color: var(--bg);
   cursor: not-allowed;
+}
+
+/* ── LIGHT THEME OVERRIDES ── */
+html[data-theme="light"] .review-card {
+  background: linear-gradient(145deg, rgba(240,236,230,0.98), rgba(232,228,223,0.98)) !important;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(139, 130, 118, 0.08), 0 1px 3px rgba(0,0,0,0.04);
 }

@@ -114,7 +114,7 @@ const EquipmentPage = () => {
               image={item.image || 'https://via.placeholder.com/300x200?text=Equipment'}
               type={TYPE_OPTIONS.find(t => t.value === item.type)?.label || item.type}
               model={item.name}
-              price={`${item.price} грн`}
+              price={item.price}
               average_rating={item.average_rating}
               details={[
                 { label: "Бренд", value: item.brand },

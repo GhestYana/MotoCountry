@@ -13,7 +13,7 @@
     margin-bottom: 30px;
     text-align: center;
     font-size: 2.5rem;
-    background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+    background: linear-gradient(135deg, var(--text) 0%, var(--muted) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -38,11 +38,11 @@
 
 .product-miniature-info h3 {
     margin: 0;
-    color: #fff;
+    color: var(--text);
 }
 
 .product-miniature-info p {
-    color: #888;
+    color: var(--muted);
     margin: 5px 0 0;
 }
 
@@ -60,7 +60,7 @@
 
 .form-group label {
     font-size: 1.1rem;
-    color: #ccc;
+    color: var(--muted);
 }
 
 .rating-select {
@@ -71,7 +71,7 @@
 
 .star {
     cursor: pointer;
-    color: #333;
+    color: var(--surface-2);
     transition: all 0.2s;
 }
 
@@ -105,7 +105,7 @@
 .submit-review-btn {
     padding: 15px 30px;
     background: var(--neon);
-    color: #000;
+    color: var(--bg);
     border: none;
     border-radius: 10px;
     font-size: 1.1rem;
@@ -116,7 +116,7 @@
 }
 
 .submit-review-btn:hover {
-    background: #7cff63;
+    background: var(--neon);
     transform: translateY(-2px);
     box-shadow: var(--neon-glow);
 }
@@ -124,7 +124,7 @@
 .back-btn {
     background: none;
     border: none;
-    color: #888;
+    color: var(--muted);
     cursor: pointer;
     margin-bottom: 20px;
     transition: color 0.3s;
@@ -149,7 +149,7 @@
     margin-bottom: 30px;
     text-align: center;
     font-size: 2.5rem;
-    background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+    background: linear-gradient(135deg, var(--text) 0%, var(--muted) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -166,7 +166,7 @@
 
 .review-blocked-icon {
     font-size: 3rem;
-    color: #4ade80;
+    color: var(--neon);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -174,12 +174,19 @@
 
 .review-blocked h2 {
     font-size: 1.6rem;
-    color: #fff;
+    color: var(--text);
     margin: 0;
 }
 
 .review-blocked p {
-    color: #aaa;
+    color: var(--muted);
     font-size: 1rem;
     margin: 0;
+}
+
+/* ── LIGHT THEME OVERRIDES ── */
+html[data-theme="light"] .add_review_container {
+  background: linear-gradient(145deg, rgba(240,236,230,0.98), rgba(232,228,223,0.98)) !important;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(139, 130, 118, 0.08), 0 1px 3px rgba(0,0,0,0.04);
 }

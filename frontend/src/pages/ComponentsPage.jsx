@@ -42,9 +42,15 @@ const ComponentsPage = () => {
       try {
         const res = await fetch(`/api/components?${params}`);
         const data = await res.json();
-        setItems(data);
+        if (Array.isArray(data)) {
+          setItems(data);
+        } else {
+          console.error('API returned non-array:', data);
+          setItems([]);
+        }
       } catch (error) {
         console.error("Failed to fetch components:", error);
+        setItems([]);
       }
     };
     fetchItems();
@@ -94,7 +100,7 @@ const ComponentsPage = () => {
               image={item.image || 'https://via.placeholder.com/300x200?text=Component'}
               type={TYPE_OPTIONS.find(t => t.value === item.type)?.label || item.type}
               model={item.name}
-              price={`${item.price} грн`}
+              price={item.price}
               average_rating={item.average_rating}
               details={[
                 { label: "Бренд", value: item.brand },

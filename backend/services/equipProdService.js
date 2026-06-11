@@ -1,4 +1,11 @@
 const db = require('../db');
+const { normalizeImage, normalizeImages } = require('../utils/imageHelper');
+
+const normalizeRow = (row) => ({
+  ...row,
+  image: normalizeImage(row.image),
+  images: normalizeImages(row.image),
+});
 
 module.exports.getEquipment = async (filters) => {
   let query = `
@@ -61,7 +68,8 @@ module.exports.getEquipment = async (filters) => {
     query += ` ORDER BY id DESC`;
   }
 
-  return db.query(query, values);
+  const result = await db.query(query, values);
+  return { ...result, rows: result.rows.map(normalizeRow) };
 };
 
 module.exports.getEquipmentById = async (id) => {
@@ -70,7 +78,8 @@ module.exports.getEquipmentById = async (id) => {
     FROM prod_equipment p 
     WHERE p.id = $1
   `;
-  return db.query(query, [id]);
+  const result = await db.query(query, [id]);
+  return { ...result, rows: result.rows.map(normalizeRow) };
 };
 
 module.exports.addEquipment = async (data) => {

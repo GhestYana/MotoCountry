@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <filter id="g">
+      <feGaussianBlur stdDeviation="1.4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="64" height="64" rx="13" fill="#060606"/>
+
+  <g filter="url(#g)" stroke="#39ff14" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-width="2">
+
+    <!-- Rear wheel -->
+    <circle cx="12" cy="48" r="8"/>
+    <!-- Front wheel -->
+    <circle cx="50" cy="48" r="7.5"/>
+
+    <!-- === BODY OUTLINE === -->
+
+    <!-- Tail (sharp upswept rear end) -->
+    <path d="M12 40 L16 36 L20 33 L22 28 L26 26"/>
+
+    <!-- Seat hump — high, sharp tail -->
+    <path d="M22 28 L20 23 L24 20 L28 21 L28 26"/>
+
+    <!-- Tank top line -->
+    <path d="M28 21 L34 19 L40 18"/>
+
+    <!-- Windscreen (tall, angled) -->
+    <path d="M34 19 L36 14 L40 13 L42 16 L40 18"/>
+
+    <!-- Upper fairing / nose -->
+    <path d="M40 18 L44 17 L48 20 L50 24 L50 30"/>
+
+    <!-- Split nose / lower fairing chin -->
+    <path d="M44 17 L47 15 L50 17 L50 20"/>
+
+    <!-- Lower fairing belly -->
+    <path d="M50 30 L51 36 L50 40 L50 48"/>
+
+    <!-- Bottom frame / belly pan -->
+    <path d="M20 33 L22 36 L30 38 L42 38 L50 36"/>
+
+    <!-- Fork legs -->
+    <path d="M50 30 L51 40"/>
+
+    <!-- Swingarm -->
+    <path d="M20 40 L12 44"/>
+
+    <!-- Exhaust (side, compact) -->
+    <path d="M22 36 L18 38 L16 41 L14 42"/>
+
+    <!-- Handlebar -->
+    <path d="M42 16 L44 13 L46 13"/>
+
+  </g>
+</svg>

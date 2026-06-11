@@ -3,11 +3,39 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { normalizeProductCategory } from '../utils/productCategory';
 import { getFavorites, setFavorites, isProductFavorite, isAuthenticated } from '../utils/favoritesStorage';
+import { useCurrency } from '../hooks/useCurrency';
 import '../styles/ProductDetailPage.css';
+
+const normalizeImage = (image) => {
+  if (!image) return [];
+  if (Array.isArray(image)) return image.filter(Boolean);
+  if (typeof image === 'string') {
+    const trimmed = image.trim();
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      const inner = trimmed.slice(1, -1);
+      const parts = inner.match(/(?:[^,"]+|"[^"]*")+/g) || [];
+      return parts.map(p => p.replace(/^"|"$/g, '').trim()).filter(Boolean);
+    }
+    // TEXT колонка с несколькими URL через запятую
+    if (trimmed.includes(',')) {
+      return trimmed.split(',').map(p => p.trim()).filter(Boolean);
+    }
+    return trimmed ? [trimmed] : [];
+  }
+  return [];
+};
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return 'https://via.placeholder.com/600x400?text=No+Image';
+  if (imagePath.startsWith('http')) return imagePath;
+  if (imagePath.startsWith('/')) return imagePath;
+  return `/${imagePath}`;
+};
 
 const ProductDetailPage = () => {
   const { category, id } = useParams();
   const navigate = useNavigate();
+  const { format } = useCurrency();
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -16,8 +44,13 @@ const ProductDetailPage = () => {
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editRating, setEditRating] = useState(5);
   const [editText, setEditText] = useState('');
+  const [activeImg, setActiveImg] = useState(0);
   const user = JSON.parse(localStorage.getItem('user'));
   const currentUserId = user?.id;
+
+  // Нормалізуємо images: завжди масив
+  const images = product ? normalizeImage(product.image || product.images) : [];
+  const mainImage = getImageUrl(images[activeImg] || images[0]);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -276,8 +309,23 @@ const ProductDetailPage = () => {
       </button>
 
       <div className="product-detail-main">
-        <div className="product-detail-image">
-          <img src={product.image} alt={product.name} />
+        <div className="product-detail-gallery">
+          <div className="product-detail-image">
+            <img src={mainImage} alt={product.name} />
+          </div>
+          {images.length > 1 && (
+            <div className="image-thumbnails">
+              {images.map((img, idx) => (
+                <button
+                  key={idx}
+                  className={`thumb-btn ${idx === activeImg ? 'active' : ''}`}
+                  onClick={() => setActiveImg(idx)}
+                >
+                  <img src={getImageUrl(img)} alt={`${product.name} ${idx + 1}`} />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="product-detail-info">
@@ -285,7 +333,7 @@ const ProductDetailPage = () => {
           <h1 className="product-title">{product.name}</h1>
           <p className="product-brand">{product.brand}</p>
           <div className="product-price-and-rating">
-            <div className="product-price-large">{product.price} $</div>
+            <div className="product-price-large">{format(product.price)}</div>
             <div className="product-average-rating">
               <Star size={18} className="star-icon filled" fill="#ffc107" stroke="#ffc107" />
               <span className="rating-value">

@@ -1,8 +1,26 @@
 const db = require('../db');
+const { normalizeImage, normalizeImages } = require('../utils/imageHelper');
+
+const normalizeRow = (row) => ({
+  ...row,
+  image: normalizeImage(row.image),
+  images: normalizeImages(row.image),
+});
+
+// Нормалізує image: якщо масив — повертає перший елемент, інакше — як є
+const normalizeImageLegacy = (image) => {
+  if (Array.isArray(image)) return image[0] || null;
+  return image || null;
+};
 
 module.exports.getComponents = async (filters) => {
   let query = `
-    SELECT p.*, (SELECT ROUND(AVG(rating), 1) FROM product_reviews r WHERE r.component_id = p.id) as average_rating 
+    SELECT p.id, p.name, p.price,
+           (p.image)[1] AS image,
+           p.image AS images,
+           p.image_small, p.brand, p.type, p.availability,
+           p.description, p.quantity, p.parameters, p.rating,
+           (SELECT ROUND(AVG(rating), 1) FROM product_reviews r WHERE r.component_id = p.id) as average_rating 
     FROM prod_components p 
     WHERE 1=1
   `;
@@ -51,7 +69,12 @@ module.exports.getComponents = async (filters) => {
 
 module.exports.getComponentById = async (id) => {
   const query = `
-    SELECT p.*, (SELECT ROUND(AVG(rating), 1) FROM product_reviews r WHERE r.component_id = p.id) as average_rating 
+    SELECT p.id, p.name, p.price,
+           (p.image)[1] AS image,
+           p.image AS images,
+           p.image_small, p.brand, p.type, p.availability,
+           p.description, p.quantity, p.parameters, p.rating,
+           (SELECT ROUND(AVG(rating), 1) FROM product_reviews r WHERE r.component_id = p.id) as average_rating 
     FROM prod_components p 
     WHERE p.id = $1
   `;
