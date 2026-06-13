@@ -10,8 +10,6 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
@@ -32,7 +30,7 @@ services:
       MINIO_ENDPOINT: minio
       MINIO_PORT: 9000
     ports:
-      - "5000:5000"
+      - "5001:5000"
     depends_on:
       db:
         condition: service_healthy
@@ -68,7 +66,7 @@ services:
     container_name: motostore_frontend
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "20032:80"
     depends_on:
       - backend
 
