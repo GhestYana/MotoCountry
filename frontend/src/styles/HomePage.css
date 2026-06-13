@@ -527,8 +527,10 @@ html[data-theme="light"] .hero-grid {
   }
 
   .hero-nav {
-    right: 5vw;
-    bottom: 40px;
+    position: static;
+    justify-content: flex-end;
+    padding: 0 5vw;
+    margin-top: -10px;
   }
 
   .home-products-grid {
@@ -660,5 +662,35 @@ html[data-theme="light"] .hero-photo-img-glow-layer.sharp {
   .type-tab {
     padding: 5px 10px;
     font-size: 0.7rem;
+  }
+}
+
+/* ── BOTTOM ROW: dots + nav arrows ── */
+.hero-bottom-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6vw 32px;
+}
+
+/* Desktop: keep original absolute nav, hide mobile nav */
+.hero-nav-mobile {
+  display: none;
+}
+
+@media (max-width: 900px) {
+
+  /* Hide the absolute positioned desktop nav */
+  .hero-nav {
+    display: none;
+  }
+
+  /* Show inline nav next to dots */
+  .hero-nav-mobile {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
   }
 }

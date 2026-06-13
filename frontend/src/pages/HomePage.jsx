@@ -188,15 +188,22 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="hero-dots">
-          {TYPES.map((t, i) => (
-            <button
-              key={t.type}
-              className={`hero-dot ${i === activeIdx ? 'active' : ''}`}
-              style={i === activeIdx ? { background: t.color } : {}}
-              onClick={() => goTo(i)}
-            />
-          ))}
+        <div className="hero-bottom-row">
+          <div className="hero-dots">
+            {TYPES.map((t, i) => (
+              <button
+                key={t.type}
+                className={`hero-dot ${i === activeIdx ? 'active' : ''}`}
+                style={i === activeIdx ? { background: t.color } : {}}
+                onClick={() => goTo(i)}
+              />
+            ))}
+          </div>
+
+          <div className="hero-nav-mobile">
+            <button className="nav-btn" onClick={prev}><ChevronLeft size={20} /></button>
+            <button className="nav-btn" onClick={next}><ChevronRight size={20} /></button>
+          </div>
         </div>
       </section>
 
